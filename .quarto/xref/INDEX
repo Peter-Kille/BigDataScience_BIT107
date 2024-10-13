@@ -13,5 +13,20 @@
   },
   "index.qmd": {
     "index.html": "368e81bf"
+  },
+  "03_FAIR_data.qmd": {
+    "03_FAIR_data.html": "8577ddc3"
+  },
+  "0.1_index.qmd": {
+    "0.1_index.html": "ff9bd16b"
+  },
+  "2.1_HPC_Cloud_Slurm.qmd": {
+    "2.1_HPC_Cloud_Slurm.html": "72c4b827"
+  },
+  "3.1_FAIR_data.qmd": {
+    "3.1_FAIR_data.html": "4ab0f7f6"
+  },
+  "3.2_Containers.qmd": {
+    "3.2_Containers.html": "3ad3bf52"
   }
 }

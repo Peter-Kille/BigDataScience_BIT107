@@ -1,0 +1,947 @@
+---
+title: "HPC, Cloud Computing & Job Schedulers"
+author: "Professor Peter Kille"
+output:
+  rmdformats::material:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+<body style="background-color:gray99;">
+
+![](01_Images/logo.jpg){width="10%"}
+
+# FAIR data sharing
+
+FAIR Data Principles
+
+-   Findable
+
+-   Accessibility
+
+-   Interoperability
+
+-   reusability
+
+Review detailed Opperational implications as articulated by (GO FAIR)[<https://www.go-fair.org/fair-principles/>]
+
+Also consider Tim Berners-Less (5\* deployment Scheme for open Data)[<https://5stardata.info/en/>]
+
+![alt text](03_Images/5star-data.png) Figure 1.
+5\* data
+
+A widely used system for data sharing is the assignment of DOIs (Digital Object Identifier) - The DOI scheme is coordinated by a non-for International DOI Foundation (IDF)[<https://www.doi.org/index.html>] which manages a body of registration agencies which need to comply is a ISO accredited procedures.
+All Journals and most databases providers can assign DOIs - once you have a DOI it measn your data is web accessible.
+
+::: {#hello .greeting .message style="color: red;"}
+Workshop activity:
+
+***What FAIR data principles are address but obtaining a DOI***
+:::
+
+# Data sharing platforms
+
+## **Guide to contributing to NCBI SRA**
+
+Are you looking to make your science more reproducible and transparent by making your data public?
+Or do you need to upload your data somewhere before your manuscript can be published?
+The NCBI Sequence Reach Archive (SRA) is a public searchable platform where genetic data and associated metadata may be uploaded, downloaded and reused.
+
+### **Getting started**:
+
+Before beginning, it is helpful to read through several NCBI pages to understand the necessary data that is required for a successful upload.
+A good starting point is [here](https://www.ncbi.nlm.nih.gov/sra/docs/submitportal/).
+Understanding NCBI's data hierarchy will also be helpful for understanding how your data should be submitted.
+
+####A summary of NCBI prefixes####
+
+| Prefix | Accession Name | NCBI Definition                                                                                                                                                                                                            |                                    Example                                     |
+|-----------|-----------|----------------------------------------|:---------:|
+| PRJNA  | BioProject     | The goal of your research effort                                                                                                                                                                                           |      [PRJNA477007](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA477007/)       |
+| SRP    | Study          | An object that contains project metadata describing sequencing study or project                                                                                                                                            | [SRP150953](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?study=SRP150953) |
+| SAMN   | Sample         | An object that contains metadata describing the physical sample upon which a sequencing experiment was performed                                                                                                           |      [SAMN09463455](https://www.ncbi.nlm.nih.gov//biosample/SAMN09463455)      |
+| SRX    | Experiment     | An object containing metadata describing the library, platform selection and processing parameters involved in a sequencing experiment                                                                                     |      [SRX7621456](https://www.ncbi.nlm.nih.gov/sra/SRX7621456%5Baccn%5D)       |
+| SRR    | Run            | An object containing actual sequencing data for a sequencing experiment. Experiments may contain multiple runs if multiple sequencing instrument runs were needed, but preferable data structure is one run per experiment |   [SRR10954732](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR10954732)    |
+
+### **Submitting**:
+
+**Log in on to the [SRA Submission Portal Wizard](https://submit.ncbi.nlm.nih.gov/subs/sra/)**
+
+**Create new submission** by clicking on the 'New Submission' button.
+Your submission will receive a temporary SUB# ID, and you can use this to contact SRA staff if you have issues.
+
+#####Follow steps (you can leave at any step and return to it later).
+The Submission Portal will check to make sure everything is okay after each step and your position will be displayed on the progress bar.
+
+![alt text](https://www.ncbi.nlm.nih.gov/core/assets/sra/images/sra-8-steps.png) Figure 1.
+NCBI SRA submission progress bar
+
+**1. Submitter information**
+
+You will be asked for your contact information and affiliations.
+You can also create a Group, which will allow your collaborators to read, modify, submit and delete your submissions.
+
+**2. General information**
+
+You will be asked if you already registered your project and samples.
+Select yes or no.
+If yes, enter the accession number for your existing BioProject and you will be redirected to Step #6.
+If no, the Wizard will ask you to create them.
+Select the release date for your data.
+The default is immediately.
+
+**3. Project information**
+
+Enter information about your project, including title, a description and grant information.
+
+**4. BioSample type**
+
+Select the best description for your data.
+A Pinsky Lab example would be 'Model organism or animal sample'.
+
+**5. BioSample attributes**
+
+You will be asked to provide information about your samples.
+You can either enter it directly into the built-in editor, or download a BioSamples template, fill it out and upload it.
+
+Enter each sample as a separate line and follow the directions on the template with regards to each of the colored data columns to ensure all necessary data have been included.
+
+A complete BioSamples template can be viewed [here](03_Images/SRA-submission-master/PADE_NCBI_biosamples.xlsx).
+
+**6. SRA metadata**
+
+If you are entering metadata for new BioSamples, you may either enter the metadata using the built-in editor, or you may download a SRA metadata template, fill it out and upload it.
+Follow the instructions on the template to ensure all required information about sequencing methodology is included.
+An example of a SRA metadata template for new BioSamples may be viewed [here](https://github.com/pinskylab/SRA-submission/blob/master/SRA_metadata_PADE.xlsx).
+
+If you have previously uploaded SRA metadata, download and complete the SRA metadata template.
+You must make sure that you include the BioSample accession number so that your new sequences are correctly linked to your existing BioSamples.
+An easy way to obtain these is to navigate to your previous submission within the submission portal and then to Download the attributes file with BioSample accessions (Figure 2).
+
+![alt text](03_Images/SRA-submission-master/biosample_accessions.png)
+
+Figure 2.
+Where to download a file with BioSample accession numbers for previously submitted samples.
+
+**7. Files**
+
+NCBI SRA accepts different file types.
+The Pinsky Lab aims to contribute FASTQ and BAM files for each sequenced individual, plus the reference that reads are aligned to.
+More information about file types may be found [here](https://www.ncbi.nlm.nih.gov/sra/docs/submitformats/).
+The file names need to be the same as those that you specified in the SRA Metadata.
+
+As genomic data are large, there are several ways to transfer your sequence data to the NCBI SRA. Within this section of the Submission Portal, NCBI offers several ways to transfer your data: HTTP/Aspera Connect Plugin, FTP/Aspera Command Line or Amazon S3.
+If your data are less than 10 GB or you have fewer than 300 individuals, you can try to drag files directly into the Submission Portal, which will upload via HTTP.
+If your data are larger, select `Request preload folder` button.
+If you select the method you would like to use, some brief instructions will appear.
+Here, we will discuss various FTP options in more detail.
+Note that the time it takes to transfer your data will depend on the size of your data (often hours to days).
+
+**FTP using the command line**
+
+1.  Create a single directory with all the files you want to upload.
+2.  Ensure you have FTP. You may need to install if not.
+3.  Navigate to the directory all the files you want to upload are.
+4.  Establish a FTP connection by typing `ftp -i`.
+5.  Next, type `open ftp-private.ncbi.nlm.nih.gov`.
+6.  Provide your username this is listed in the Submission Portal, likely `subftp`.
+7.  Provide the password listed in the Submission Portal.
+8.  Navigate to your account folder listed in the Submission Portal: `cd uploads/your_account_folder_name`
+9.  Create a subfolder. You must do this or you will not be able to see your files in the preload option: `mkdir new_folder_name`
+10. Navigate into the target folder: `cd new_folder_name`
+11. Copy your files into the target folder: `mput *`
+12. Go back to the Submission Portal and select the folder to upload. It takes at least 10 minutes for transferred files to appear in the preload option.
+13. To exit the FTP window, type `bye`.
+
+**FTP using third-party software (Fetch, for example)**
+
+1.  Open a Fetch window and connect to the NCBI server by typing in the hostname, your username and password, and direct Fetch to your `new_folder_name` within `your_account_folder_name` (Figure 3).
+2.  Open another Fetch window and connect to the location of your data.
+3.  Highlight the files you want to transfer and drag into the Fetch window that is connected to the NCBI server. This will copy your files from your server to the NCBI server.
+4.  Go back to the Submission Portal and select the folder to upload. It takes at least 10 minutes for transferred files to appear in the preload option.
+
+![alt text](03_Images/SRA-submission-master/fetch.png) Figure 3.
+Screenshot showing how to connect to the NCBI server using Fetch
+
+**8. Review & submit**
+
+The Submission Portal will check to make sure all your sequencing files have correctly transferred.
+It will also check to make sure that you have uploaded sequence data for all listed BioSamples.
+Review all the information before completing the submission.
+If an error arises during processing, you'll receive an email asking you to contact SRA staff.
+
+### **Troubleshooting**:
+
+If you run into trouble, there is a [SRA Submission Portal Troubleshooting Guide](https://www.ncbi.nlm.nih.gov/sra/docs/submitspfiles), or email SRA staff at [sra\@ncbi.nlm.nih.gov](sra@ncbi.nlm.nih.gov)
+
+::: {.greeting .message style="color: red;"}
+## Review SRA submission process by reviewing submission SRX8525144
+
+Identify the following data about this submission:
+
+-   Author
+
+-   Organism (full taxonomy)
+
+-   Sequencing platform / type
+
+-   Biomaterial, Bioproject
+
+-   Publication and aim of work
+:::
+
+## Creating a Zenodo Account
+
+***Step 1. Signup*** To create an account with Zenodo click on the signup tab at there home page `https://zenodo.org/`.
+
+![zenodo signup page](03_Images/Zendo_signup.png)
+
+***Step 2. Link to Github (or ORCID)*** You will be provided with options to link your submission to either your ORCID account or your Github account.
+If you are a academic linking to you ORCID account has the advantage that it tracks your Zenodo submissions to your ORCID profile so people can immediately view your public accessions.
+For today's session I suggest you link the account to your github account created earlier.
+
+![Link to Github](03_Images/Zendo_signup_withgit.png)
+
+***Step 3. Zenodo Authorization form*** Zenodo needs you to agree to various data sharing protocols - review and accept if you are happy to do so.
+
+![Zenodo Authortization](03_Images/Zendo_Authortize.png) ***Step 4. Data Upload*** I suggest you upload your ICA assigned sequences.
+
+![Upload Page](03_Images/Zendo_upload.png)
+
+***Step 5. Zenodo Big Data Biology Master Community*** I have created a community that you can associated your data with so we can see the class submissions.
+
+![Cardiff University - Big Data Biology Masters](03_Images/Zendo_community_Cu-bdbm.png)
+
+***Step 6. Submission Pages*** Here's is a minimal metadata need to support the submission.
+I suggest you keep the submission as ***closed access*** submission as you will uploading non-primary data.
+
+![Subission Page 1](03_Images/Zendo_upload_Page1.png)
+
+![Subission Page 2](03_Images/Zendo_upload_Page2.png)
+
+![Subission Page 3](03_Images/Zendo_upload_Page3.png)
+
+***Step 7. Review Submission*** Review the submission -
+
+![Review Submission](03_Images/Zendo_Uploaded.png)
+
+::: {.greeting .message style="color: red;"}
+### Zenodo
+
+-   Create an account
+-   Use a dataset to create a private repository
+-   Link repository to your github page
+-   Create a private submission linked to cu-bdbm community
+:::
+
+# Reproducible Informatics -- beyond git
+
+## Linux Containers - from Linux primitives to container run-time software
+
+Linux containers are a method of isolating running process from the host system.
+Containers will provide:
+
+-   filesystem isolation
+-   process isolation
+-   resource limitations, and
+-   network isolation (not discussed in this tutorial)
+
+We will discover exactly what these mean as we progress through the tutorial.
+
+## containers vs virtual machines
+
+Any introductory course on containers will almost always start with a comparison of containers vs. virtual machines.
+(I am unsure how useful this actually is to students undertaking their first course on Linux, they may well meet containers before even coming across Virtual Machines).
+Assuming you're aware of both, we provide a brief comparison now:
+
+In effect, virtual machines virtualise hardware, and containers will virtualise the Linux kernel.
+Virtual machines will run their own Linux kernel on top of virtualised hardware; containers will share the host's kernel.
+This means any processes in a virtual machine will often need to pass through two separate kernels to perform a given task; conversely, any interaction with hardware from processes within a container, need only deal with the single host kernel.
+This often means that container processes have little overhead, and processes are handled at host-native speeds.
+Whereas virtual machine processes have more overhead and will often suffer in performance.
+
+## Container Runtimes -- docker/singularity/podman
+
+The above tutorial built up a container using linux primitives alone.
+This is obviously a rather cumbersome approach to creating containers and container images.
+The following set of tools are some of the, perhaps, more well-known container runtime engines and container image and management software.
+
+-   docker\*
+-   podman\*
+-   containerd
+-   systemd-nspawn
+-   charliecloud\*
+-   singularity\*
+
+These container runtime engines are (mostly) command-line tools that make creating, updating, packaging, distributing, and running containers significantly easier than using the Linux primitives we met earlier.
+This allowed them to become very popular with system administrators, and also program developers to distribute their software.
+These tools, at their core, do exactly what we did with the Linux primitives, but abstract many of the complexities away from managing cgroups, namespaces, and chroot, but in a more convenient way.
+
+Those container run-time engines marked with the '\*', above, are the container run-time engines that computational scientists are most likely to come across.
+Docker/Podman have very similar features to one another, and are best suited to personal desktops/laptops (i.e. single tenancy systems).
+Singularity/Charliecloud are also very similar to one another, and will often be available to researchers on multi-tenancy HPC clusters.
+
+The reason that Docker/Podman\*\* are not suitable to multi-tenancy systems is that by default containers run as the root user.
+If you launch a container with docker, unless you specify a specific user, you're going to run that container as the root user.
+And this is the same root user inside the container as the root on the host (much the same as in our Linux primitives tutorial above).
+In addition, when providing a non-privileged user access to the docker runtime, that user can easily get access to the host's root account with just a few Docker commands - an obvious security risk in multi-tenancy environments.
+
+\*\* Podman in fact does have some mechanism to not run as the host's root inside the container, but it's still not often found on multi-tenancy servers.
+
+Conversely, the container run-time engines of Singularity and Charliecloud are safe to run in multi-tenancy environments.
+These run-time engines use a more recent kernel feature of *User Namespaces*.
+These are like the namespaces we met in the above *chroot* tutorial, except that a "*root*" user inside the container is mapped to a non-privileged user on the host.
+This is all handled by the Linux kernel - so no new security boundary exists (we've already accepted the Linux kernel as safe).
+
+## Container repositories
+
+-   (Docker)[<https://hub.docker.com/>]
+
+-   (Singularity)[sylabs.io]
+
+-   Podman -- Search within application - podman search <search_term>
+
+-   (Charliecloud)[<https://github.com/hpc/charliecloud>]
+
+::: {.greeting .message style="color: red;"}
+Use Docker hub to identify a containers that would support fastqc, trimmomatic (or fastp) and multiqc.
+
+-   How would you judge a container is valid and 'safe' to use
+
+-   Can you identify a container that has all the of the programs
+:::
+
+# Using Containers
+
+## Pulling and using a Container in an interactive job
+
+Running interactive *Singularity* containers is simple:
+
+1.  Pull image (or use an existing one)
+2.  Create and enter an interactive slurm job
+3.  Run and enter the Singularity container
+
+(The final two steps could also be combined into one command.)
+
+## Example of pulling down and running an Ubuntu image
+
+```         
+## Enter interactive node on defq
+srun -c 4 --mem=8G -p defq --pty bash
+
+## Load latest singularity module
+module load singularity/3.8.7
+
+##make and enter a directory for your containers within your mydata directory
+cd /mnt/clusters/sponsa/data/$USER/
+mkdir singularity
+cd singularity/
+
+##Create cache and point the singularity cache directory
+mkdir cache
+export SINGULARITY_TMPDIR=/mnt/clusters/sponsa/data/$USER/singularity/cache/
+export SINGULARITY_CACHEDIR=/mnt/clusters/sponsa/data/$USER/singularity/cache
+
+## Create and enter a working folder
+mkdir working
+cd working/
+
+
+## Pull ubuntu version 20.04 from Docker Hub and store as .sif image
+singularity pull ubuntu.sif docker://ubuntu:20.04
+
+# Run singularity container
+# --contain is optional but will ensure $HOME is not auto mounted
+singularity run --contain ubuntu.sif
+
+# You should now find yourself within the container
+Singularity>
+
+# Try checking the operating system by running
+cat /etc/os-release
+# If working this should be Ubuntu if not working then RockyLinux (iago OS)
+
+# To exit container
+exit
+```
+
+### Security warning
+
+The **\--contain** option when running a container is considered optional in singularity but **essential** by the BiocomputingHub.
+By default Singularity will try to auto-mount your \$HOME folder into the container.
+While this may not seem like an issue, if you are pulling down an unknown Docker Hub image (or using a .sif file created by someone else) this potentially could be compromised in some form.
+For example if it has a runscript to delete all files and folders on the mounted home drive then it could potentially wipe your home drive (or anything else you have mounted).
+Singularity runs with the same permission inside the container as outside the container for security, no critical protected files will be removed if you do not have permission to delete them.
+
+### What next ?
+
+The ubuntu image is pretty useless by itself but serves as a good demo, there are however multiple pre-made images on Docker Hub that can be downloaded and used in Singularity (<https://hub.docker.com/>).
+Something more useful would be an up to date python image, such as python:3.9.12-buster
+
+Follow the previous guide up to the step where you pull down the image...
+
+```         
+# Pull Python version 3.9.12 from Docker Hub and store as .sif image
+singularity pull python3.9.12.sif docker://python:3.9.12-buster
+
+# Run the container in singularity
+singularity run --contain python3.9.12.sif
+
+Python 3.9.12 (main, Apr 20 2022, 18:47:18) 
+[GCC 8.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+```
+
+You will notice that unlike the ubuntu image this launches straight into the python application.
+This is caused by the singularity runscript that is set within the container.
+To check what the runscript will do on run, you can run this command outside of the container :
+
+```         
+singularity inspect -r python3.9.12.sif
+
+# At the top of the resulting text you will see something like:
+#!/bin/sh
+OCI_ENTRYPOINT=''
+OCI_CMD='"python3"'
+CMDLINE_ARGS=""
+```
+
+The OCI_CMD is the command running inside the container on launch, for the python container this is launching python3.
+If you want to launch the container without auto launching python3 (without the runscript) then you can use singularity shell, using the python container as an example:
+
+```         
+singularity shell --contain python3.9.12.sif 
+Singularity> 
+```
+
+### Running scripts and binding folders to container
+
+As well as run and shell the other most useful command is **exec**, this allows you to execute a command when the container is launched.
+
+For example to run a simple Python script.
+
+Make a demo python script called example.py with the following contents.
+
+```         
+#!/usr/bin/python3
+print('This is a demo python script')
+```
+
+Make it executable
+
+```         
+chmod +x example.py
+```
+
+To be able to run the example.py script within the container you have to make the folder location accessible within the container.
+The easiest way to do this is to bind (mount/attach) the folder to a specified location within the container using the **-B** option.
+
+Assume that example.py is located at `/mnt/clusters/sponsa/data/$USER/script`
+
+```         
+singularity exec --contain -B /mnt/clusters/sponsa/data/$USER/script:/mnt/clusters/sponsa/data/$USER/script python3.9.12.sif \
+python /mnt/clusters/sponsa/data/$USER/script/example.py
+> This is a demo python script
+```
+
+This command is mounting the `/mnt/clusters/sponsa/data/$USER/script` folder to the same location within the `python.sif` container, then executing the python command with the example.py script.
+
+The output is passed back outside the container and the container is automatically killed as it has no other tasks to perform.
+
+You do not need to bind to the same location as the folder (/mnt/clusters/sponsa/data/\$USER/script...) but it's pretty confusing if you don't !!
+
+```         
+singularity exec --contain -B /mnt/clusters/sponsa/data/$USER/script:/bind python3.9.12.sif python /bind/example.py
+> This is a demo python script
+```
+
+## Using containers in Slurm scripts
+
+This is a workflow of how to safely pull and convert an existing docker image from Docker Hub.
+Docker Hub is a cloud based repository used mainly for storing and distributing container images.
+
+One of the benefits of Singularity is the ability to convert Docker images into Singularity images.
+
+For this workflow we will be pulling and converting a container image for fastqc, this is a popular program used for quality assesses NGS data.
+
+<br><strong>Not all Docker container images will work in Singularity, Docker requires root access to run.<br>Singularity on gomphus runs without any root access so the container images are immutable.<br></strong> <br>
+
+### Security : Finding a safe image to download
+
+Any docker user can upload to Docker Hub, please do not automatically assume all of these images are safe and working correctly !
+
+To find a safe image to download then treat Docker Hub the same as downloading software from any internet site.
+
+Searching for fastqc on Docker Hub (<https://hub.docker.com/search?q=fastqc>) brings up lots of container images.
+Look for those images from reliable sources (such as the application creator), updated relatively recently, with a large number of downloads and if possible stars (these are given by previous users).
+
+(Often official image are listed on the github sites of the software - this is not the case for fastqc as it is predates container use)
+
+<br> \### Pulling the image
+
+Run the usual setup procedure to create a singularity environment, it's important to set the cachedir as some container images will be bigger than your %HOME space.
+
+```         
+# Enter interactive node on defq (epyc could also be used)
+srun -c 4 --mem=8G -p defq --pty bash
+
+# Load latest singularity module
+module load singularity/3.8.7
+
+# Point the singularity cache directory
+export SINGULARITY_TMPDIR=/mnt/clusters/sponsa/data/$USER/singularity/cache/
+export SINGULARITY_CACHEDIR=/mnt/clusters/sponsa/data/$USER/singularity/cache
+
+# Enter working folder
+cd /mnt/clusters/sponsa/data/$USER/singularity/
+```
+
+Pull the container image with the following command.
+To ensure reproducibly in some form it's better to use the tag specifying the version number in the pull command.
+Also name your sif file with a similar tag for future reference.
+
+```         
+singularity pull fastqc.sif docker://staphb/fastqc
+```
+
+This will start downloading the image layers and converting to .sif.
+The process can take a while so be patient, when nearly finished you will see 'Creating SIF file...'
+
+```         
+INFO:    Converting OCI blobs to SIF format
+INFO:    Starting build...
+Getting image source signatures
+Copying blob 7595c8c21622 done  
+Copying blob d13af8ca898f done  
+Copying blob 70799171ddba done
+.
+.
+.
+INFO:    Creating SIF file...
+```
+
+<br>
+
+### Using the sif image
+
+**Do not run the sif image, you will not be able to find out what it does until it's too late**,start by inspecting the runscript (what it will do when run) inside the image using:
+
+```         
+singularity inspect -r fastqc.sif
+```
+
+This shows the runscript as running **OCI_CMD='"/bin/bash"'**, so will simply run a bash prompt inside the container which is a good start.
+
+Now try entering the container, I would advise ignoring the runscript option and using 'singularity shell' to open a shell inside the container.
+Remember to also use **--contain**, this will isolate the container and prevent it from mounting your \$HOME folder which would be a big security risk on unknown containers.
+
+```         
+singularity shell --contain fastqc.sif
+```
+
+This should put you inside the container with a Singularity\> prompt.
+Run some commands to verify the container is what you expect it to be.
+For example checking for operating system version and in this case checking the Trinity version matches what was specified on the docker tags.
+Exit the container when finished.
+
+```         
+# OS version
+Singularity> cat /etc/os-release 
+NAME="Ubuntu"
+VERSION="16.04.7 LTS (Xenial Xerus)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 16.04.7 LTS"
+VERSION_ID="16.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+VERSION_CODENAME=xenial
+UBUNTU_CODENAME=xenial
+
+# Trinity version
+Singularity> fastqc -v
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+        LANGUAGE = (unset),
+        LC_ALL = (unset),
+        LANG = "en_GB.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+FastQC v0.11.9
+
+
+# exit container
+Singularity> exit
+```
+
+<br>
+
+### Where to store the container
+
+Once verified you can move the fastqc.sif anywhere you need.
+If storing the containers for any period of time just remember that any security issues or bugs will also remain in the container, they are essentially locked in time.
+
+<br>
+
+### Reproducibility
+
+It's important to document how the container was pulled or built, that way it can be re-created or updated if required again in the future.
+As a researcher you will also want to aid reproducibility of your workflow by at least recording any relevant versions of code or container-images.
+So you may want to rename this container with its version.
+
+```         
+mv fastqc.sif fastqcv0.11.9.sif
+```
+
+<br>
+
+### Interactive mode
+
+Let's use the fastqc.sif image to run interactively, including binding a directory to run some tests.
+We will be using sample_data from Session5 RNAseq-Processing `/mnt/clusters/sponsa/data/classdata/Bioinformatics/Session5/RNAseq-Processing/fastq/SRR*.fastq`
+
+Create an interactive node on the defq partition.
+
+```         
+srun -c 4 --mem=8G -p defq --pty bash
+
+# load singularity module
+module load singularity/3.8.7
+
+mkdir /mnt/clusters/sponsa/data/$USER/singularity/test_data/
+
+cd /mnt/clusters/sponsa/data/$USER/singularity/test_data/
+
+cp /mnt/clusters/sponsa/data/classdata/Bioinformatics/Session5/RNAseq-Processing/fastq/SRR*.fastq .
+```
+
+To use the test data we need to make that folder accessible inside the container.
+We could bind the complete `/mnt/clusters/sponsa/data/$USER/` folder but it's more secure to only bind the folder(s) you require inside the container.
+You can specify where the folder is mounted inside the container but I will use the same folder location as outside the container to make it easier to remember.
+
+<br><strong>As we are using --contain to protect the home folder it's a good idea to change to a working directory where you have full write access.
+Using --pwd is a simple way of setting the default folder on container launch<br></strong> <br>
+
+```         
+# use --bind or -B to bind folder
+# use --contain to prevent mounting of home folder
+singularity shell --contain --bind /mnt/clusters/sponsa/data/$USER/singularity/test_data/:/mnt/clusters/sponsa/data/$USER/singularity/test_data/ --pwd \
+/mnt/clusters/sponsa/data/$USER/singularity/test_data/  /mnt/clusters/sponsa/data/${USER}/singularity/working/fastqcv0.11.9.sif
+
+# You should now see the singularity> prompt inside the container
+
+# test if sample data is attached correctly
+singularity> ls /mnt/clusters/sponsa/data/$USER/singularity/test_data/
+```
+
+Once inside the container you can run standard trinity commands, you may need to specify output locations.
+If the output tries to write to an area outside of your mounted/bound folder it will either fail due to lack of permissions (images are read only) or it will appear to write but dissapear when the container is exited.
+
+```         
+# run a standard fastqc command within container
+fastqc -t 4 SRR*
+```
+
+<br>
+
+### Slurm
+
+Once confident that the container image does the job you require you can wrap it into a slurm script to automate the process.
+
+```         
+#!/bin/bash
+#SBATCH --partition=defq       # the requested queue
+#SBATCH --nodes=1              # number of nodes to use
+#SBATCH --tasks-per-node=1     #
+#SBATCH --cpus-per-task=4      #   
+#SBATCH --mem=8G     # in megabytes, unless unit explicitly stated
+#SBATCH --error=%J.err         # redirect stderr to this file
+#SBATCH --output=%J.out        # redirect stdout to this file
+##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification
+##SBATCH --mail-type=all                                   # email on job start, failure and end
+
+
+echo "Some Usable Environment Variables:"
+echo "================================="
+echo "hostname=$(hostname)"
+echo \$SLURM_JOB_ID=${SLURM_JOB_ID}
+echo \$SLURM_NTASKS=${SLURM_NTASKS}
+echo \$SLURM_NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE}
+echo \$SLURM_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+echo \$SLURM_JOB_CPUS_PER_NODE=${SLURM_JOB_CPUS_PER_NODE}
+echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
+
+# Write jobscript to output file (good for reproducability)
+cat $0
+```
+
+Load the singularity module and then set the location of the .sif container image.
+The TOTAL_RAM variable simply converts \${SLURM_MEM_PER_NODE} back into GB, trinity can only use GB and slurm tends to convert GB to MB.
+WORKINGFOLDER in this case is the location of the test data and what we will also use as default folder within the container, as it will be set to our external bound folder it will have full read&write access.
+The BINDS variable will container any folders you wish to bind into the container, you can specify multiple folders seperated by ','.
+You need to specify the iago location of the folder and then the mount point within the container.
+
+```         
+# load singularity module
+module load singularity/3.8.7
+
+# set singularity image
+SINGIMAGEDIR=/mnt/clusters/sponsa/data/${USER}/singularity/working/
+SINGIMAGENAME=fastqcv0.11.9.sif
+
+# Set working directory 
+WORKINGFOLDER=/mnt/clusters/sponsa/data/$USER/singularity/test_data/
+
+# set folders to bind into container
+export BINDS="${BINDS},${WORKINGFOLDER}:${WORKINGFOLDER}"
+```
+
+To be able to run a Trinity script inside the container the script needs to be in a location that is accessible within the container, the easiest folder in this case is the WORKINGFOLDER.
+You can either generate a bash script (trinity_source_commands.sh) as part of the sbatch script or link to an existing script.
+Adding the commands to the sbatch script is better for reproducability, having a seperate script is more likely to be forgotten in a few months but the choice is yours.
+
+The Trinity commands are pretty standard, but we make use of the WORKINGFOLDER variable and slurm environment variables to declare RAM and CPU.
+I like to echo the TOTAL_RAM AND CPU to the output file (JOBID.out) to check the conversion worked correctly and the CPU total is also matching, obviously not essential.
+
+```         
+############# SOURCE COMMANDS ##################################
+cat >${WORKINGFOLDER}/fastqc_source_commands.sh <<EOF
+fastqc -t ${SLURM_CPUS_PER_TASK} SRR*
+
+echo TOTAL_RAM=${TOTAL_RAM}
+echo CPU=${SLURM_CPUS_PER_TASK}
+
+EOF
+################ END OF SOURCE COMMANDS ######################
+```
+
+This is the magic command that sets up the singularity container environment, binds requested drives, sets the working directory and then executes the bash script inside of the container.
+
+```         
+singularity exec --contain --bind ${BINDS} --pwd ${WORKINGFOLDER} ${SINGIMAGEDIR}/${SINGIMAGENAME} bash ${WORKINGFOLDER}/fastqc_source_commands.sh
+```
+
+This is the same as all slurm jobs where a JOBID will be created and queued within the slurm queue, on completion of the script the container and job will close.
+The slurm logs .out and .err will contain the job details so please check on completion.
+
+# Building Containers from Scratch - Extension work - only for greeks
+
+## Linux *chroot* Jails
+
+Jails are similar to containers (although cannot quite be classed as a container because by themselves they do not fit the isolation criteria).
+Nonetheless, we will start our journey with jails, because all the tools needed to create jails are usually already available by default on any Linux system.
+
+Jails have been available to Linux since the 1980's (long before containers were introduced to the Linux kernel, around 2006).
+Jails provide a method of isolating the filesystem, so that the jail cannot see the host's filesystem.
+During this tutorial we will further implement limitations on the jail, isolating various other aspects of the host system away from the jail, to the point where we convert our jail to a full-fledged container.
+
+First of all, we want to virtualise a linux system, so let's start by building up a typical linux filesystem - like the one listed above.
+Download the Alpine minirootfs and unpack.
+Alpine is a well-known and (very) lightweight linux distribution.
+
+``` bash
+mkdir alpine && curl -L https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-minirootfs-3.16.2-x86_64.tar.gz   | tar xvzf - -C alpine
+#
+# for the purposes of this tutorial only: add a file to alpine, to help with navigation when switching between host and jail.
+touch alpine/in_alpine
+#
+# change ownership to the alpine folder to root (recursively)
+sudo chown -R root:root alpine/
+```
+
+Take a look at the resulting *alpine* folder, and you should see something similar to the filesystem tree shown above.
+
+## filesystem isolation
+
+Create and enter a chroot jail.
+The following command will create a jail, and run the */bin/sh* process within that jail.
+You can exit the chroot jail whenever you like by typing *exit* or *ctrl-d*.
+
+``` bash
+sudo chroot alpine /bin/sh -l
+```
+
+This jail provides us with filesystem isolation.
+Look around the filesystem within the jail, and you will see no way out to the host filesystem.
+
+## process isolation
+
+However, this chroot jail does nothing about process-isolation, network-isolation, or resource-limitation.
+In fact, probing for any information about any processes currently fails (even processes within the chroot jail itself).
+This is because the */proc*, */sys*, and */dev* pseudo-filesystems have not yet been made available to the chroot jail, so therefore the jail has no route to probe the linux kernel.
+Let's fix that now, and mount the pseudo-filesystems.
+
+``` bash
+# we're still in the jail
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+```
+
+Now we can prove that no process-isolation takes place.
+Because the chroot jail now has access to the host kernel (because of our mounted /proc, /sys, and /dev), we can now probe the running processes from inside the chroot jail.
+Running
+
+``` bash
+top
+# press 'q' to exit when ready to do so
+```
+
+you can see not only the running processes inside the chroot jail, but all processes running on the host system.
+i.e. there is no process isolation within this chroot jail.
+
+## resource limitation
+
+To test our chrooot jails for resource limitation, we will create a chroot jail (with the mounted kernel folders), and install some stress-test software to see if there is any limitation to how many resources we can consume (answer: resources are not restrained in any way).
+
+``` bash
+sudo chroot alpine /bin/sh -l
+#
+# provide the chroot with access to the google dns service
+echo 'nameserver 8.8.8.8 >/etc/resolv.conf
+#
+# install some software (apk is the alpine package manager)
+apk add python3 python3-dev gcc linux-headers musl-dev bash
+```
+
+Now that some useful software is installed into our *chroot* image, exit and re-enter the *chroot* jail, this time with a slightly more useful *shell*.
+
+``` bash
+# ctrl-d to exit the chroot jail, then re-enter
+sudo chroot alpine /bin/bash -l
+```
+
+Now we're back inside the *chroot* jail, let's install our stress-test software:
+
+``` bash
+python3 -m venv /opt/pycont --clear --copies
+. /opt/pycont/bin/activate
+pip install stress
+```
+
+Now let's stress out our *chroot* jail.
+
+``` bash
+# this commands will run $THREADS threads.
+THREADS=16
+stress -c $THREADS
+```
+
+You can check out the cpu usage from a terminal on the host machine.
+You can choose any number of threads, you will find the only cpu-limit is that of the hardware of your host machine.
+
+So, we have seen that chroot jails will isolate a filesystem, but does not limit resources, or isolate processes.
+
+## Limiting resources with cgroups
+
+In order to limit processes to a certain amount of resource (CPU, RAM), one can use *cgroups* (Control Groups).
+*cgroups* is a Linux kernel feature that will allow the limitation of resources (CPU, RAM) available to a process.
+And because UNIX processes are hierarchical, children of the *cgroup*'d process are in the same cgroup and will contribute to the same limit.
+
+Let's set up a *cgroup* and attach our chroot jail to it.
+
+``` bash
+sudo cgcreate -a $USER -g memory,cpuset:alpine-jail
+```
+
+This will set up a cgroup within the linux kernel, called *alpine-jail*, owned by the \$USER that ran the command.
+We can see the setup within the kernel */sys* folder:
+
+``` bash
+ls -l /sys/fs/cgroup/*/alpine-jail  #* list the contents of multiple alpine-jail folders 
+```
+
+Limit the resources available to this cgroup by making changes to the kernel data-structures:
+
+``` bash
+# Note, since the user $USER owns this data-structure, sudo access is not necessary
+# Limit RAM to 4GB
+echo 2000000000 > /sys/fs/cgroup/memory/alpine-jail/memory.limit_in_bytes
+# Limit the cgroup to use the first 5 CPUs only
+echo 0-4 > /sys/fs/cgroup/cpuset/alpine-jail/cpuset.cpus
+```
+
+Now we can create the chroot jail, this time running under our newly created cgroup.
+
+``` bash
+sudo cgexec -g memory,cpuset:alpine-jail  chroot alpine /bin/bash -l
+```
+
+While within the chroot jail, run the stress command and check out *top* from a host terminal.
+
+``` bash
+. opt/pycont/bin/activate
+stress -c 10
+```
+
+Because we limited the cgroup to cpus 0-4 only, our chroot jail only has 5 cpus from the host available to it.
+By running *stress* across 10 cpus, you should see that the process is limited, and 10 threads are being shared across 5 cpus, each thread running at approximately 50% cpu usage.
+
+Our chroot jail can now almost be classed as a container.
+All that is left is for us to do is isolate processes.
+
+## Isolating processes with Namespaces
+
+Our next target for creating a full-fledged container, is to limit our virtual linux environment to have access to list and probe it's own processes only.
+That is, the jail should not be able to see any information about any processes that were not spawned within that jail.
+Unsurprisingly, the Linux kernel has a feature to do exactly that.
+These are called *Namespaces*.
+Namespaces allow us to hide processes from other processes.
+There are many different types of Namespaces (process, network, mount, and more), and their description are beyond the scope of this tutorial.
+But for our purposes, we will simply bundle up the relevant Namespaces into a single command.
+And the command we will now introduce, is called *unshare*.
+
+``` bash
+sudo unshare  --mount --uts --ipc --pid --fork --user --map-root-user chroot alpine /bin/bash
+```
+
+The above unshare command will create a new namespace for the chroot alpine jail.
+This namespace is a new environment that's isolated on the system with its own processes (PIDs), and mounts (volumes) etc.
+
+By running the above Namespaced jail, we immediately enter the isolated environment.
+And since we have restricted mounts (check out the unshare arguments), we are not able to mount all the psuedo-filesystems as we did previously.
+However, just mounting the /proc filesystem will suffice:
+
+``` bash
+mount -t proc none /proc
+```
+
+Now, running the top command, we can see we have isolated processes - the only processes listed are those that have been spawned from within the jail/container.
+That is, we are not able to see any information about processes on the host.
+
+``` bash
+top
+```
+
+We have now used the kernel feature *Namespaces* to protect the host processes from the container processes.
+
+Next, we will collate what we have learned, and form a command that will create a truly isolated container runtime, using linux primitives and kernel features alone.
+
+## Putting it all together
+
+Having run through all our isolation techniques, the following command will create a container from using Linux primitives only.
+
+``` bash
+# assumes the cgroup has been cerated
+sudo  cgexec -g memory,cpuset:alpine-jail  \
+  unshare  --mount --uts --ipc --pid --fork --user --map-root-user \
+  chroot alpine /bin/bash
+# you may need to mount the /proc filesystem again
+mount -t proc none /proc
+```
+
+The command may look a little complicated, but we have met all the components of this command separately throughout this tutorial: the *chroot* will isolate a filesystem; the *unshare* will isolate the processes; and the *cgexec* will limit the resources.
+
+## Cleaning up
+
+To clean up the chroot jail, exit the jail, then unmount the pseudo-filesystems..
+
+\`\`\`bash sudo umount alpine/proc alpine/sys alpine/dev
