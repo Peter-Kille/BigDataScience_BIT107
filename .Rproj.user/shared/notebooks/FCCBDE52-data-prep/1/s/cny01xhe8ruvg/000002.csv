@@ -1,0 +1,8 @@
+"0","```r
+metadata1 <- metadata %>% 
+  slice(1:999)
+metadata2 <- metadata %>% 
+  slice(1000:1998)
+metadata3 <- metadata %>% 
+  slice(1998:2886)
+```"

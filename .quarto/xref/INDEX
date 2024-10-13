@@ -1,0 +1,17 @@
+{
+  "02_HPC_Cloud_Slurm.qmd": {
+    "02_HPC_Cloud_Slurm.html": "e59467d6"
+  },
+  "about.qmd": {
+    "about.html": "ca1298c7"
+  },
+  "Images/SRA-submission-master/data-prep.Rmd": {
+    "data-prep.html": "4c0615f5"
+  },
+  "Images/SRA-submission-master/Guide to NCBI SRA.md": {
+    "Guide to NCBI SRA.html": "ede88905"
+  },
+  "index.qmd": {
+    "index.html": "368e81bf"
+  }
+}

@@ -1,0 +1,5 @@
+"0","```r
+lig_only <- sample_ids %>% 
+  select(-sample_name) %>% 
+  rename(sample_name = ligation_id)
+```"

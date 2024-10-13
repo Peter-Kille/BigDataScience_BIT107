@@ -1,0 +1,4 @@
+"0","```r
+samp_lig <- sample_ids %>% 
+  mutate(sample_name = str_c(sample_name, ligation_id, sep = \"_\"))
+```"

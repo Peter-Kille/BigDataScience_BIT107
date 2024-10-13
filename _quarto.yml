@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: "Big Data Biology - BIT010"
+        contents:
+          - index.qmd
+      - section: "Session 2: HPC Cloud Slurm"
+        contents:
+          - 02_HPC_Cloud_Slurm.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+

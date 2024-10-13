@@ -1,0 +1,14 @@
+---
+title-block-style: default
+title-block-banner: darkred
+title-block-banner-color: white
+title: "Big Data Science"
+subtitle: "Workshop Material Accompanying MSc Big Data Biology Module BIT107"
+author: "Prof. Peter Kille"
+date: today
+affiliation: "Cardiff University"
+---
+
+# Big Data Science - BIT107
+
+The material associated with this git hub repository is workshop instructions linked to the Big Data Science Module BIT107, integral module for the Msc in Big Data Biology hosted by [Cardiff School of Biosciences](https://www.cardiff.ac.uk/biosciences "Cardiff School of Biosciences"), Cardiff University. If you would like to know more about our course or any other masters course at [Cardiff University](https://www.cardiff.ac.uk/ "Cardiff University") please visit our website - [Big Data Biology (MSc)](https://www.cardiff.ac.uk/study/postgraduate/taught/courses/course/big-data-biology-msc-full-time-1-year "Big Data Biology (MSc)").

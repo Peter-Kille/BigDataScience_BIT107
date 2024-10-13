@@ -1,0 +1,5 @@
+"0","```r
+write_tsv(metadata1, \"amphiprion-clarkii-metadata1.tsv\")
+write_tsv(metadata2, \"amphiprion-clarkii-metadata2.tsv\")
+write_tsv(metadata3, \"amphiprion-clarkii-metadata3.tsv\")
+```"
