@@ -17,52 +17,38 @@ knitr::opts_chunk$set(eval = FALSE)
 
 ![](Images/logo.jpg){width="10%"}
 
-# My HPC System
+# Dependencies
 
-All HPC are slightly different and it is important to understand the specific system you are using. The current activities cover relate to the IT infrastructure provided to Big Data Masters student at Cardiff University session 2022-23. If you are not part of this class then you will need to request appropriate information about the system you have been given access to.
+If you have a series of bioinformatic processes you want to execute that for a 'chain' where each step is dependent on the output of the previous step this can be considered as a simple 'workflow'. You can code these very simply in slurm labeling each job with the same name ```#SBATCH --job-name=[my_unique_jobname]``` and then calling each slurm scrip from a single file with teh command ```sbatch -d singleton [script_name]```
 
-## House Keeping
-
-
+##
+Component scripts start:
 
 ```{bash}
 #!/bin/bash
+#SBATCH --job-name=test_workflow
 #SBATCH --partition=defq       # the requested queue
 #SBATCH --nodes=1              # number of nodes to use
-#SBATCH --tasks-per-node=1     # 
+#SBATCH --tasks-per-node=1     #
 #SBATCH --cpus-per-task=1      #   
-#SBATCH --mem-per-cpu=92000     # in megabytes, unless unit explicitly stated
+#SBATCH --mem-per-cpu=1000     # in megabytes, unless unit explicitly stated
 #SBATCH --error=%J.err         # redirect stderr to this file
 #SBATCH --output=%J.out        # redirect stdout to this file
-##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification
-##SBATCH --mail-type=start                                 # email on job start  
-##SBATCH --mail-type=end                                   # email on job end
-##SBATCH --mail-type=fail                                  # email on job failure
+......
 
-echo "Usable Environment Variables:"
-echo "============================="
-echo \$SLURM_JOB_ID=${SLURM_JOB_ID} 
-echo \$SLURM_NTASKS=${SLURM_NTASKS}
-echo \$SLURM_NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE}
-echo \$SLURM_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
-echo \$SLURM_JOB_CPUS_PER_NODE=${SLURM_JOB_CPUS_PER_NODE}
-echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
-cat $0
+and your workflow scripts 
+#!/bin/bash
 
-module load blast/2.12.0
+sbatch -d singleton [slurm_script1]
 
-indir="/mnt/clusters/sponsa/data/${USER}/blast_test"
-
-dbdir="/mnt/clusters/sponsa/data/${USER}/blast_test"
-
-outdir="/mnt/clusters/sponsa/data/${USER}/blast_test"
-
-time blastp -num_threads ${SLURM_CPUS_PER_TASK} \
-            -query "${indir}/TAIR10_pep_4000.fasta" \
-            -task blastp \
-            -num_descriptions 16 \
-            -num_alignments 1 \
-            -db ${dbdir}/TAIR10_pep \
-            -out "${outdir}/blastp_cpu${SLURM_CPUS_PER_TASK}_job${SLURM_JOBID}.txt"
+sbatch -d singleton [slurm_script2]
 ```
 
+::: callout-important
+## Exercise: Make your instance based transcriptomic processes slurm compatible WORKFLOW
+
+In Session 5 of you bioinformatics introductory lectures you were given scripts to pre-process, map, count and call duplicates - [RNAseq Processing](https://peter-kille.github.io/Bioinformatics_TrainingWeb/5.1_RNAseq_processing.html).  I want you to transfer these and the data to scratch and convert these to slurm compatible scripts.
+
+**LEAVE OUT STAR LIBRARY FORMTTING STEP**
+
+:::

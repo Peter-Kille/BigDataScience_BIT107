@@ -181,7 +181,7 @@ If you would like to comment out certain slurm commands in your job-script, simp
 Some further useful (but not exhaustive) SBATCH options are detailed:
 
 | SBATCH option     | Description                                                                                                                                                     |
-|---------------------|---------------------------------------------------|
+|----------------------|--------------------------------------------------|
 | --ntasks-per-node | allocate n tasks per allocated node.                                                                                                                            |
 | --nodes           | set the number of nodes that the job will require. Each node will have --ntasks-per-node processes started                                                      |
 | --ntasks          | spawn n tasks (default=1). This determines how many processes will be spawned (for MPI jobs).                                                                   |
@@ -382,7 +382,15 @@ gomphus.job_history.sh
 | smbpk | 7174  | COMPLETED | 2022-11-07T09:18:2 | 2022-11-07T09:23:13 | 4         | 05:25.029 | 27.9% | 32000M | 1776696K | 5.4%  | 20940.17M   | 6974.14M     |
 :::
 
-## blast as an example
+::: callout-important
+## Exercise: Make your instance based transcriptomic processes slurm compatible
+
+In Session 5 of you bioinformatics introductory lectures you were given scripts to pre-process, map, count and call duplicates - [RNAseq Processing](https://peter-kille.github.io/Bioinformatics_TrainingWeb/5.1_RNAseq_processing.html).  I want you to transfer these and the data to scratch and convert these to slurm compatible scripts.
+
+:::
+
+::: {.callout-note collapse="true"}
+# Blast as an example - extension work if you are feeling confident
 
 We take a closer look at running jobs on our cluster, we should provide examples of benchmarking code in order to find how to best utilise the resources available.
 
@@ -465,6 +473,7 @@ time blastp -num_threads ${SLURM_CPUS_PER_TASK} \
 Run this blast script a number of times, increasing the --cpus-per-task and decreasing the --mem-per-cpu variables accordingly (ie 2 cpus-per-task & 46000 mem-per-cpu, 3 cpus-per-task & 30600 mem-per-cpu .....16 cpus-per-task & 5750 mem-per-cpu. Review the benchmarks considering the resources needed and the time taken to execute the jobs
 
 What are your conclusions
+:::
 :::
 
 ## Reviewing and optimising job resources
