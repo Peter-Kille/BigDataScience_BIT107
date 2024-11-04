@@ -28,5 +28,11 @@
   },
   "3.2_Containers.qmd": {
     "3.2_Containers.html": "3ad3bf52"
+  },
+  "2.2_Slurm_dependencies.qmd": {
+    "2.2_Slurm_dependencies.html": "a7c5b20e"
+  },
+  "2.3_MPI_stupidly_parrellel.qmd": {
+    "2.3_MPI_stupidly_parrellel.html": "c1ff8161"
   }
 }

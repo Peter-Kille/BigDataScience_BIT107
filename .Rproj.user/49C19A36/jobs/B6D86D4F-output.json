@@ -1,0 +1,2 @@
+[2,"\n"]
+[1,"ERROR: YAMLException: bad indentation of a mapping entry (C:\\Users\\smbpk\\Cardiff University\\Big Data Teaching - BIT107\\Student Share\\BigDataScienceWeb\\_quarto.yml, 11:9)\n10:     - section: \"Big Data Biology - BIT010\"\n11:         contents:\n           ~~\n12:           - index.qmd\n"]

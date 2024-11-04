@@ -1,0 +1,313 @@
+---
+title-block-style: default
+title-block-banner: darkred
+title-block-banner-color: white
+title: "Threads, MPI and embarrassingly parallel"
+subtitle: "Making my job faster"
+author: "Prof. Peter Kille"
+date: today
+affiliation: "Cardiff University"
+---
+
+<body style="background-color:gray99;">
+
+```{r include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+![](Images/logo.jpg){width="10%"}
+
+# Threads, MPI and embarrassingly parallel
+
+## Parallel Jobs
+
+There are a number of different scenarios in which you may want to parallelize your job:
+
+-   Embarrassingly parallel
+-   MPI - a multi-process application (possibly across multiple compute hosts)
+-   multi-threading - shared memory using OpenMP or perhaps pthreads.
+-   multiple instances of a single application.
+-   ...plus more scenarios but are probably out of scope of this tutorial.
+
+## Embarrassingly parallel
+
+Many processes in genomics do the same task on large arrays of data. One of the simplest way of speeding up the process is to split up the input files and perfrom the same task multiple times at the same time - this is called an \_**'Embarrassingly parallel'** task.
+
+Lets do this for the blast example that we started in the last task. We can investigate whether there are any further methods of improving performance, and attempt to find a improvemet in the initial blast job's solution to reduce the time taken. As it turns out, it is possible in this situation to split the input fasta file into a number of sections, and have an independent job acting on each of those sections. Each independent job could then be parallelized, say over 8 threads, and all jobs can run concurrently.
+
+We create a job script (mammoth_8thread_split_1of4.sh) that will run blast command on the first file-section only.
+
+We perform the following sequence of commands, first splitting the input fasta file into 4 parts, then creating the 4 independent job-scripts, and submit the jobs.
+
+```{bash}
+## enter a interactive Job
+srun -c 4 --mem=8G -p defq --pty bash
+cd ~/mydata/blast_test/
+
+## a new folder
+mkdir split-files4
+cd split-files4/
+cp ~/TAIR10_pep_4000.fasta  .
+#
+## split the fasta file into 4 equal(ish) sections
+curl -L https://raw.githubusercontent.com/gmarnellos/Trinotate_example_supplement/master/split_fasta.pl | perl /dev/stdin  TAIR10_pep_4000.fasta  TAIR10_pep.vol 1000
+```
+
+create script that will spawn blast_jobs (use nano or vi) - spawn_blastp.sh
+
+```{bash}
+!#/bin/bash
+
+for i in {1..4};do
+
+export i
+
+sbatch blastp.sh
+
+done
+```
+
+make script executable `chmod +x spawn_blastp.sh`
+
+Edit blast job so that each time it is called it uses a different section of the query file
+
+```{bash}
+#!/bin/bash
+#SBATCH --partition=defq       # the requested queue
+#SBATCH --nodes=1              # number of nodes to use
+#SBATCH --tasks-per-node=1     # 
+#SBATCH --cpus-per-task=8      #   
+#SBATCH --mem-per-cpu=11500    # in megabytes, unless unit explicitly stated
+#SBATCH --error=%J.err         # redirect stderr to this file
+#SBATCH --output=%J.out        # redirect stdout to this file
+##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification
+##SBATCH --mail-type=start                                 # email on job start  
+##SBATCH --mail-type=end                                   # email on job end
+##SBATCH --mail-type=fail                                  # email on job failure
+
+echo "Usable Environment Variables:"
+echo "============================="
+echo "hostname=$(hostname)"
+echo \$SLURM_JOB_ID=${SLURM_JOB_ID} 
+echo \$SLURM_NTASKS=${SLURM_NTASKS}
+echo \$SLURM_NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE}
+echo \$SLURM_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+echo \$SLURM_JOB_CPUS_PER_NODE=${SLURM_JOB_CPUS_PER_NODE}
+echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
+
+cat $0
+
+module load blast/2.12.0
+
+indir="/mnt/clusters/sponsa/data/${USER}/blast_test/split-files4"
+
+dbdir="/mnt/clusters/sponsa/data/${USER}/blast_test"
+
+outdir="/mnt/clusters/sponsa/data/${USER}/blast_test/split-files4"
+
+time blastp -num_threads ${SLURM_CPUS_PER_TASK} \
+            -query "${indir}/TAIR10_pep.vol.${i}.fasta" \
+            -task blastp \
+            -num_descriptions 16 \
+            -num_alignments 1 \
+            -db ${dbdir}/TAIR10_pep \
+            -out "${outdir}/blastp_vol${i}_cpu${SLURM_CPUS_PER_TASK}_job${SLURM_JOBID}.txt"
+```
+
+Perform file-splitting procedure for both a 2-split and a 4-split of the original fasta file. The 'time-to-solution' results are added to the original benchmark chart. We assume that all jobs run concurrently, and we take the wall-time for the longest job
+
+## MPI Jobs
+
+Our example MPI job is based on a quantum espresso calculation. This script utilises the srun command, which is part of the slurm family of tools to run a parallel job on a cluster
+
+```{bash}
+#!/bin/bash
+#SBATCH --partition=mammoth    # the requested queue
+#SBATCH --job-name=qe_mpi      # name the job           
+#SBATCH --nodes=1              # number of nodes to use
+#SBATCH --ntasks=32            # total number of tasks (processes)
+#SBATCH --mem-per-cpu=100      # in megabytes, unless unit explicitly stated
+#SBATCH --error=%J.err         # redirect stderr to this file
+#SBATCH --output=%J.out        # redirect stdout to this file
+##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification
+##SBATCH --mail-type=end                                   # email on job end
+##SBATCH --mail-type=fail                                  # email on job failure
+
+module load  qe/6.0
+
+echo "Usable Environment Variables:"
+echo "============================="
+echo "hostname=$(hostname)"
+echo \$SLURM_JOB_ID=${SLURM_JOB_ID}
+echo \$SLURM_NTASKS=${SLURM_NTASKS}
+echo \$SLURM_NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE}
+echo \$SLURM_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+echo \$SLURM_JOB_CPUS_PER_NODE=${SLURM_JOB_CPUS_PER_NODE}
+echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
+echo "module list:"
+module list 2>&1
+
+# Some of these environment variables are utilised by the qe executable itself
+export ESPRESSO_DATAPATH=/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/
+export ESPRESSO_PSEUDO=${ESPRESSO_DATAPATH}
+export ESPRESSO_TMPDIR=${ESPRESSO_DATAPATH}/${SLURM_JOB_ID}
+
+# handy to place this in job output for future reference...
+cat ${ESPRESSO_DATAPATH}/atom.in
+
+# execute the parallel job (we also time it)
+time srun -n ${SLURM_NTASKS} pw.x < ${ESPRESSO_DATAPATH}/atom.in > atom.job${SLURM_JOB_ID}.out
+```
+
+The job requests 32 cores to be allocated, and runs the srun command with the argument -n \${SLURM_NTASKS} which tells srun to spawn the mpi-job with the total number of processes requested. Quantum Espresso utilises the environment variable ESPRESSO_TMPDIR which points to a temporary folder. We design this in our slurm script to point to a subfolder.
+
+An alternative storage location is the compute node's local storage. This can improve runtime I/O performance. However, local storage on the compute nodes is limited (Gigabytes not Terabytes), and it's availability is a little hidden from the user, so take care not to fill up the disk(!) and remove all files from the compute node's local storage within the job script (your only access to the compute node's /local folder is via the slurm script). An alternative job script which utilises a compute node's /local storage is provided on the gomphus server /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/example2_mpi_localstorage.sh.
+
+## Threaded Jobs
+
+A number of popular bioinformatics software are capable of parallelising execution using threads (usually OpenMP or pthreads). This parallelisation method does not normally use distributed memory, so the application will need to be run on a single node. Our threaded example slurm-script is based on BLAST+. The job script is listed:
+
+```{bash}
+#!/bin/bash
+#SBATCH --partition=defq
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=2000
+#SBATCH --error=%J.err
+#SBATCH --output=%J.out
+##SBATCH --mail-type=end
+##SBATCH --mail-user=[your.email@address]
+
+
+# Example slurm script
+#  This script is a little wasteful of resources,
+#  but demonstrates a simple pipeline.
+#  
+#  For a more efficient use of resources, please consider
+#  running the pipeline as a series of jobs (chain-jobs).
+
+
+echo "Usable Environment Variables:"
+echo "============================="
+echo "hostname=$(hostname)"
+echo \$SLURM_JOB_ID=${SLURM_JOB_ID}
+echo \$SLURM_NTASKS=${SLURM_NTASKS}
+echo \$SLURM_NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE}
+echo \$SLURM_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+echo \$SLURM_JOB_CPUS_PER_NODE=${SLURM_JOB_CPUS_PER_NODE}
+echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
+echo "module list:"
+module list 2>&1
+
+DATAFOLDER=/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example3_pipeline
+
+
+### The data used in this pipeline has already been downloaded and stored in $DATAFOLDER.
+### Here are the commands used to download the data...
+# cd $DATAFOLDER
+# curl -LO https://data.broadinstitute.org/Trinity/Trinotate_v2.0_RESOURCES/uniprot_sprot.trinotate_v2.0.pep.gz
+# gunzip uniprot_sprot.trinotate_v2.0.pep.gz
+# curl -LO https://data.broadinstitute.org/Trinity/Trinotate_v2.0_RESOURCES/Pfam-A.hmm.gz
+# gunzip Pfam-A.hmm.gz
+# curl -L -o Trinotate.sqlite.gz https://data.broadinstitute.org/Trinity/Trinotate_v2.0_RESOURCES/Trinotate.sprot_uniref90.20150131.boilerplate.sqlite.gz
+# gunzip Trinotate.sqlite.gz
+# curl -LO ftp://ftp.ensembl.org/pub/release-82/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
+# gunzip Mus_musculus.GRCm38.cdna.all.fa.gz
+# curl -LOgz https://github.com/gmarnellos/Trinotate_example_supplement/raw/master/mouse38_cdna.fa.gz
+# gunzip mouse38_cdna.fa.gz
+
+# Now we get on to the pipeline
+
+# make a link to all datafiles
+for f in ${DATAFOLDER}/* ; do ln -s $f ; done
+
+#Index the SwissProt database for use with blast
+
+module load blast
+makeblastdb -version
+makeblastdb -in uniprot_sprot.trinotate_v2.0.pep -dbtype prot
+module unload blast
+
+# Prepare the Pfam database for use with hmmscan
+module load hmmer
+hmmpress -h
+hmmpress Pfam-A.hmm
+module load hmmer
+
+# Use Transdecoder to produce the most likely longest-ORF peptide candidates
+module load TransDecoder/v3.0.1
+TransDecoder.LongOrfs -t mouse38_cdna.fa
+TransDecoder.Predict -t mouse38_cdna.fa
+module unload TransDecoder/v3.0.1
+
+module load blast
+blastx -query mouse38_cdna.fa -db uniprot_sprot.trinotate.pep -num_threads ${SLURM_CPUS_PER_TASK} -max_target_seqs 1 -outfmt 6 > blastx.vol.outfmt6
+blastp -query mouse38_cdna.fa.transdecoder.pep -db uniprot_sprot.trinotate_v2.0.pep -num_threads ${SLURM_CPUS_PER_TASK} -max_target_seqs 1 -outfmt 6 > blastp.vol.outfmt6
+module unload blast
+
+# Identify protein domains
+module load hmmer/3.1b2
+hmmscan --cpu ${SLURM_CPUS_PER_TASK} --domtblout TrinotatePFAM.out Pfam-A.hmm mouse38_cdna.fa.transdecoder.pep > pfam.log
+module unload hmmer/3.1b2
+
+# Produce the Gene/Transcript relationship
+grep "^>" Mus_musculus.GRCm38.cdna.all.fa   | perl -p -e 's/^>(\S+).*\s+gene:(ENSMUSG\d+).*$/$2\t$1/' > gene_transcript_map.txt
+
+# Now populate the sqlite database
+module load Trinotate/v3.0.1
+Trinotate Trinotate.sqlite init --gene_trans_map gene_transcript_map.txt --transcript_fasta mouse38_cdna.fa --transdecoder_pep mouse38_cdna.fa.transdecoder.pep
+Trinotate Trinotate.sqlite LOAD_swissprot_blastp blastp.vol.outfmt6
+Trinotate Trinotate.sqlite LOAD_swissprot_blastx blastx.vol.outfmt6
+Trinotate Trinotate.sqlite LOAD_pfam TrinotatePFAM.out
+# Create the annotation report
+Trinotate Trinotate.sqlite report -E 0.00001 > trinotate_annotation_report.xls
+module unload Trinotate/v3.0.1
+```
+
+This is quite a busy job-script (and also inefficient on resources!). It runs through a number of steps, but some of those steps will utilise parallelisation via threading, and use the slurm environment variable SLURM_CPUS_PER_TASK to inform the application(s) of the correct number of threads.
+
+But why is this job inefficient on resources? This particular job involves a number of steps: some utilising parallelisation, and some not; some memory-hungry, others not. The problem with this is that the job has allocated to it a set amount of resources (compute and memory), which is allocated to it for the lifetime of the job. But only at certain times in this job are the resources requested fully utilised. At all other times this job is running, the resources are allocated, but not used, and therefore making those resources unavailable to other jobs. This has a knock-on effect of increasing queue-times, and leaves expensive resources idle.
+
+A much more efficient way of running the same pipeline is to chain the job - split the pipeline into component parts and submit separate jobs for each of those parts. Each section of the pipeline (having its own job-script) is then free to allocate resources specific to that section of the pipeline. In the slurm world this is called job chaining, and has been exemplified in the next section using the same pipeline.
+
+## Job Chains and Job Dependency
+
+Chaining jobs is a method of sequentially running dependent jobs. Our chain-job example is a pipeline of 6 separate job scripts, based on the blast+ pipeline of the previous section. We do not show the full six job-scripts here for brevity, but are available on the gomphus cluster under /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain.
+
+Slurm has an option -d or --dependency that allows to specify that a job is only permitted to start if another job finished successfully.
+
+In the folder (gomphus cluster) /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain there are 6 separate job-scripts that need to be executed in a certain order. They are numbered in the correct pipeline order:
+
+```{bash}
+[user@gomphus ~]$ tree  /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain
+/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain
+├── example4_chain-step1.sh
+├── example4_chain-step2.sh
+├── example4_chain-step3.sh
+├── example4_chain-step4.sh
+├── example4_chain-step5.sh
+├── example4_chain-step6.sh
+├── example4_submit_all.sh
+├── mouse38_cdna.fa
+├── Mus_musculus.GRCm38.cdna.all.fa
+├── Pfam-A.hmm
+├── pipeline1.sh
+├── Trinotate.sqlite
+└── uniprot_sprot.trinotate_v2.0.pep
+
+0 directories, 13 files
+```
+
+Each job is (importantly) commonly named using #SBATCH --job-name within each job-script. Also within this folder is a simple script (example4_submit_all.sh) that will execute the sbatch command on each of the job-scripts in the correct order:
+
+```{bash}
+#!/bin/bash:
+
+for c in /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain/example4_chain-step?.sh ;
+do
+ sbatch -d singleton $c
+done
+```
+
+This sbatch command uses the -d singleton flag to notify slurm of the job-dependencies (all jobs must have the name job name defined by `#SBATCH --job-name [some constant name]`. At which point each submitted job will be forced to depend on successful completion of any previous job submitted by the same user, and with the same job-name. The full pipeline of 6 jobs will now run to completion, with no further user-intervention, making efficient use of the available resources.

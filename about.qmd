@@ -1,0 +1,15 @@
+---
+title: "About"
+---
+
+About this site
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
+```{bash}
+1 + 1
+```

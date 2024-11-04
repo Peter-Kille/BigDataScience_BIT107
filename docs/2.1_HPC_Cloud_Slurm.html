@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Prof.&nbsp;Peter Kille">
-<meta name="dcterms.date" content="2024-10-13">
+<meta name="dcterms.date" content="2024-11-04">
 
 <title>HPC, Cloud Computing &amp; Job Schedulers</title>
 <style>
@@ -156,7 +156,7 @@ background: darkred;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 13, 2024</p>
+        <p class="date">November 4, 2024</p>
       </div>
     </div>
     
@@ -204,6 +204,18 @@ background: darkred;
   <div class="sidebar-item-container"> 
   <a href="./2.1_HPC_Cloud_Slurm.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">HPC, Cloud Computing &amp; Job Schedulers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.2_Slurm_dependencies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Slurm Dependencies</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.3_MPI_stupidly_parrellel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Threads, MPI and embarrassingly parallel</span></a>
   </div>
 </li>
       </ul>
@@ -280,14 +292,6 @@ background: darkred;
   <ul class="collapse">
   <li><a href="#blast-as-an-example" id="toc-blast-as-an-example" class="nav-link" data-scroll-target="#blast-as-an-example">blast as an example</a></li>
   <li><a href="#reviewing-and-optimising-job-resources" id="toc-reviewing-and-optimising-job-resources" class="nav-link" data-scroll-target="#reviewing-and-optimising-job-resources">Reviewing and optimising job resources</a></li>
-  </ul></li>
-  <li><a href="#threads-mpi-and-embarrassingly-parallel" id="toc-threads-mpi-and-embarrassingly-parallel" class="nav-link" data-scroll-target="#threads-mpi-and-embarrassingly-parallel">Threads, MPI and embarrassingly parallel</a>
-  <ul class="collapse">
-  <li><a href="#parallel-jobs" id="toc-parallel-jobs" class="nav-link" data-scroll-target="#parallel-jobs">Parallel Jobs</a></li>
-  <li><a href="#embarrassingly-parallel" id="toc-embarrassingly-parallel" class="nav-link" data-scroll-target="#embarrassingly-parallel">Embarrassingly parallel</a></li>
-  <li><a href="#mpi-jobs" id="toc-mpi-jobs" class="nav-link" data-scroll-target="#mpi-jobs">MPI Jobs</a></li>
-  <li><a href="#threaded-jobs" id="toc-threaded-jobs" class="nav-link" data-scroll-target="#threaded-jobs">Threaded Jobs</a></li>
-  <li><a href="#job-chains-and-job-dependency" id="toc-job-chains-and-job-dependency" class="nav-link" data-scroll-target="#job-chains-and-job-dependency">Job Chains and Job Dependency</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -401,7 +405,9 @@ background: darkred;
 </section>
 <section id="hpc-resources" class="level3">
 <h3 class="anchored" data-anchor-id="hpc-resources">HPC resources</h3>
-<p>The head node on gomphus is a 16 cpu / 32 Gb RAM server…..but it provides access to a serise of servers.</p>
+<p>The head node on gomphus is a 16 cpu / 32 Gb RAM server…..but it provides access to a series of servers.</p>
+<div class="greeting message" style="color: red;">
+<p>Node Availability</p>
 <p>The head node has a specific script that displays the resources available to you. Run the command:</p>
 <pre><code>gomphus.node_availability.sh</code></pre>
 <p>This should display the following information:</p>
@@ -449,7 +455,7 @@ background: darkred;
 <td>idle</td>
 <td>64</td>
 <td>1:64:1</td>
-<td>93375</td>
+<td>128000</td>
 <td>0</td>
 <td>1</td>
 <td>(null)</td>
@@ -463,7 +469,7 @@ background: darkred;
 <td>idle</td>
 <td>64</td>
 <td>1:64:1</td>
-<td>93375</td>
+<td>440000</td>
 <td>0</td>
 <td>1</td>
 <td>(null)</td>
@@ -475,17 +481,18 @@ background: darkred;
 <td>1</td>
 <td>defq*</td>
 <td>idle</td>
-<td>32</td>
+<td>64</td>
 <td>1:32:1</td>
-<td>62250</td>
+<td>128000</td>
 <td>0</td>
 <td>1</td>
 <td>(null)</td>
-<td>0/32/0/32</td>
+<td>0/64/0/64</td>
 <td>none</td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 </section>
 </section>
@@ -561,8 +568,8 @@ background: darkred;
 <p>Some further useful (but not exhaustive) SBATCH options are detailed:</p>
 <table class="table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 29%">
+<col style="width: 70%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -639,33 +646,40 @@ background: darkred;
 <p>Programs should be loaded using ‘module load’ after the slurm parameters have been defined and before you define variable or provide commands for you program.</p>
 <p>module list for gomphus (2022)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">--------------</span> /mnt/clusters/sponsa/software/nospack/modulefiles <span class="at">--------------</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">artemis/18.2.0</span>              multiqc/1.13              rnammer/1.2</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bioconvert/0.4.3</span>            panaroo/1.3.0             snippy/v4.6.0</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">bioperl-live/release-1-7-2</span>  perl/5.34.0               snp-sites/2.5.1</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">blast/2.12.0</span>                prokka_mambaforge/1.14.6  SPAdes/3.15.5</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">fmlrc/v1.0.0</span>                python/3.7.4              treeview/1.2.0</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">gromacs/2022.3</span>              python/3.10.5             unicycler/v0.5.0</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">java/11.0.2</span>                 qiime2/2022.8</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">mitos/2.0.4</span>                 quast/5.2.0</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ex">--</span> /mnt/clusters/sponsa/software/spack/share/spack/modules/linux-rocky8-zen <span class="at">---</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ex">abyss/2.3.1</span>        fastqc/0.11.9         picard/2.26.2       velvet/1.2.10</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ex">alan/2.1.1</span>         fasttree/2.1.10       pilon/1.22          vt/0.5772</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="ex">barrnap/0.8</span>        fastx-toolkit/0.0.14  prokka/1.14.6       wtdbg2/2.3</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools/1.14</span>      figtree/1.4.3         racon/1.4.3</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools2/2.30.0</span>   freebayes/1.3.6       raxml-ng/1.0.2</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="ex">blast-plus/2.12.0</span>  gdbm/1.19             samtools/1.15.1</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2/2.4.2</span>      hmmer/3.3.2           seqtk/1.3</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="ex">caliper/2.8.0</span>      igv/2.12.3            spades/3.15.3</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="ex">cdhit/4.8.1</span>        mafft/7.481           star/2.7.6a</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="ex">dos2unix/7.4.2</span>     mcl/14-137            subread/2.0.2</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="ex">dyninst/12.2.0</span>     minimap2/2.14         tbl2asn/2022-04-26</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="ex">emboss/6.6.0</span>       ncurses/6.3           tmux/3.2a</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="ex">fastp/0.20.0</span>       perl-bioperl/1.7.6    trimmomatic/0.39</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ex">-----------------------</span> /usr/share/Modules/modulefiles <span class="at">------------------------</span></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="ex">dot</span>  module-git  module-info  modules  null  use.own</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-------------------------------------------------------</span> /mnt/clusters/sponsa/software/nospack/modulefiles <span class="at">--------------------------------------------------------</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer/1.3.3</span>       checkm2/1.0.1-conda  fmlrc/v1.0.0  java/17.0.1          metabat2/2.17-conda  reportseff/v2.7.6  snippy/v4.6.0</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">artemis/18.2.0-conda</span>  coverm/0.7.0-conda   go/1.22.4     MAGScoT/1.0.0-conda  mitos/2.0.4-conda    rnammer/1.2        snp-sites/2.5.1</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">bioconvert/1.1.1</span>      fastqc/v0.12.1       java/11.0.2   maxbin2/2.2.7-conda  qiime2/2024.5-conda  snakemake/8.20.6   star/2.7.11b-conda</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">--------------------------------------------</span> /mnt/clusters/sponsa/software/spack/share/spack/modules/linux-rocky8-zen <span class="at">--------------------------------------------</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">abricate/1.0.0-hyc7x7h</span>     caliper/2.11.0-ebmrucn        gatk/4.5.0.0-ah5vlbz          picard/3.1.1-6z7e4l7        python/3.11.7-vwaruyl     vt/0.5772-hm4aagu</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">abyss/2.3.5-n7ic7f5</span>        cdhit/4.8.1-kljs53a           grace/5.1.25-6ff2ofq          pilon/1.22-4m44rwk          qualimap/2.2.1-5n2xovw    wtdbg2/2.3-zh2scui</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">alan/2.1.1-m3s7v46</span>         dos2unix/7.4.4-lbswpzc        gromacs/2022.6-55ulebd        prokka/1.14.6-mframqo       r/4.4.1-tbzwogp</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ex">barrnap/0.9-ypa5cto</span>        dyninst/13.0.0-7ddr5br        igv/2.16.2-izjk4b4            py-macs3/3.0.0b3-hzy2kys    raxml-ng/1.1.0-af5tz6w</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools/1.19-ugoqbig</span>      emboss/6.6.0-dyziyqa          kraken2/2.1.2-dj6czbo         py-multiqc/1.15-hcx2o2j     seqtk/1.4-emavr63</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools2/2.31.1-z2zkxtk</span>   fastp/0.23.4-rsrnyej          mafft/7.505-zhsnti2           py-panaroo/1.2.10-ngp4lzx   spades/3.15.5-yabtygn</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ex">blast-plus/2.14.1-qxsspbk</span>  fasttree/2.1.11-ca5e4pn       mcl/14-137-seoyf2k            py-quast/5.2.0-az54c2i      subread/2.0.6-hbzwdut</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie/1.3.1-hcmaf4e</span>       fastx-toolkit/0.0.14-td2y4ek  minimap2/2.28-mpg3455         py-unicycler/0.5.0-b3qlto7  tmux/3.4-goii5an</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2/2.5.2-xec7g7r</span>      figtree/1.4.4-lbef6u3         perl-xml-simple/2.25-3txxqfi  python/3.7.4-j2ydjpr        trimmomatic/0.39-gkur3wo</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="ex">busco/5.4.3-y2iac7v</span>        freebayes/1.3.6-fwyhw7e       perl/5.34.0-3gr3ksd           python/3.10.5-g77cmwy       velvet/1.2.10-z6f62cw</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="ex">-------------------------------------------------------</span> /mnt/clusters/gomphus/software/nospack/modulefiles <span class="at">-------------------------------------------------------</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer/1.3.3</span>       charliecloud/0.38    fmlrc/v1.0.0  MAGScoT/1.0.0-conda  nextflow/23.10.0     rnammer/1.2       star/2.7.11b-conda</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer/1.3.4</span>       checkm2/1.0.1-conda  go/1.22.4     maxbin2/2.2.7-conda  nextflow/24.04.4     snakemake/8.20.6</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="ex">artemis/18.2.0-conda</span>  coverm/0.7.0-conda   java/11.0.2   metabat2/2.17-conda  qiime2/2024.5-conda  snippy/v4.6.0</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="ex">bioconvert/1.1.1</span>      fastqc/v0.12.1       java/17.0.1   mitos/2.0.4-conda    reportseff/v2.7.6    snp-sites/2.5.1</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="ex">-------------------------------------------</span> /mnt/clusters/gomphus/software/spack/share/spack/modules/linux-rocky8-zen <span class="at">--------------------------------------------</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="ex">abricate/1.0.0-arbowjh</span>     caliper/2.11.0-ebmrucn        gatk/4.5.0.0-ah5vlbz          picard/3.1.1-6z7e4l7        python/3.11.7-vwaruyl     vt/0.5772-hm4aagu</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ex">abyss/2.3.5-n7ic7f5</span>        cdhit/4.8.1-kljs53a           grace/5.1.25-4rbzfg5          pilon/1.22-4m44rwk          qualimap/2.2.1-5n2xovw    wtdbg2/2.3-zh2scui</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="ex">alan/2.1.1-m3s7v46</span>         dos2unix/7.4.4-lbswpzc        gromacs/2022.6-55ulebd        prokka/1.14.6-thd4tzv       r/4.4.1-p34wi5a</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="ex">barrnap/0.9-ypa5cto</span>        dyninst/13.0.0-7ddr5br        igv/2.16.2-izjk4b4            py-macs3/3.0.0b3-hzy2kys    raxml-ng/1.1.0-af5tz6w</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools/1.19-kxefepm</span>      emboss/6.6.0-jyqjajy          kraken2/2.1.2-dj6czbo         py-multiqc/1.15-rrs5gki     seqtk/1.4-emavr63</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools2/2.31.1-z2zkxtk</span>   fastp/0.23.4-rsrnyej          mafft/7.505-zhsnti2           py-panaroo/1.2.10-aio7ggr   spades/3.15.5-yabtygn</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="ex">blast-plus/2.14.1-ad3m247</span>  fasttree/2.1.11-ca5e4pn       mcl/14-137-seoyf2k            py-quast/5.2.0-ahwdgc2      subread/2.0.6-hbzwdut</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie/1.3.1-hcmaf4e</span>       fastx-toolkit/0.0.14-td2y4ek  minimap2/2.28-mpg3455         py-unicycler/0.5.0-gayhlsi  tmux/3.4-goii5an</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2/2.5.2-xec7g7r</span>      figtree/1.4.4-lbef6u3         perl-xml-simple/2.25-3txxqfi  python/3.7.4-j2ydjpr        trimmomatic/0.39-gkur3wo</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="ex">busco/5.4.3-lhb6rj4</span>        freebayes/1.3.6-fwyhw7e       perl/5.34.0-3gr3ksd           python/3.10.5-g77cmwy       velvet/1.2.10-z6f62cw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="viewing-information-about-a-job" class="level2">
@@ -736,7 +750,7 @@ background: darkred;
 <h2 class="anchored" data-anchor-id="interactive-jobs">Interactive Jobs</h2>
 <p>Enter an interactive job and use this to review the files created by the RNAseq processing scripts.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">##Use any avalible node</span></span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">##Use any available node</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">##use a specific node - in this example called gomphus3</span></span>
@@ -749,6 +763,7 @@ background: darkred;
 </section>
 <section id="using-hpc-resources-effectively" class="level1">
 <h1>Using HPC resources effectively</h1>
+<div class="greeting message" style="color: red;">
 <p>gomphus.job_history.sh</p>
 <table class="table">
 <colgroup>
@@ -801,6 +816,7 @@ background: darkred;
 </tr>
 </tbody>
 </table>
+</div>
 <section id="blast-as-an-example" class="level2">
 <h2 class="anchored" data-anchor-id="blast-as-an-example">blast as an example</h2>
 <p>We take a closer look at running jobs on our cluster, we should provide examples of benchmarking code in order to find how to best utilise the resources available.</p>
@@ -883,280 +899,6 @@ background: darkred;
 <div class="greeting message" style="color: red;">
 <p>Use <code>gomphus.job_history.sh</code> to review the efficiency of your job</p>
 </div>
-</section>
-</section>
-<section id="threads-mpi-and-embarrassingly-parallel" class="level1">
-<h1>Threads, MPI and embarrassingly parallel</h1>
-<section id="parallel-jobs" class="level2">
-<h2 class="anchored" data-anchor-id="parallel-jobs">Parallel Jobs</h2>
-<p>There are a number of different scenarios in which you may want to parallelize your job:</p>
-<ul>
-<li>Embarrassingly parallel</li>
-<li>MPI - a multi-process application (possibly across multiple compute hosts)</li>
-<li>multi-threading - shared memory using OpenMP or perhaps pthreads.</li>
-<li>multiple instances of a single application.</li>
-<li>…plus more scenarios but are probably out of scope of this tutorial.</li>
-</ul>
-</section>
-<section id="embarrassingly-parallel" class="level2">
-<h2 class="anchored" data-anchor-id="embarrassingly-parallel">Embarrassingly parallel</h2>
-<p>Many processes in genomics do the same task on large arrays of data. One of the simplest way of speeding up the process is to split up the input files and perfrom the same task multiple times at the same time - this is called an _<strong>‘Embarrassingly parallel’</strong> task.</p>
-<p>Lets do this for the blast example that we started in the last task. We can investigate whether there are any further methods of improving performance, and attempt to find a improvemet in the initial blast job’s solution to reduce the time taken. As it turns out, it is possible in this situation to split the input fasta file into a number of sections, and have an independent job acting on each of those sections. Each independent job could then be parallelized, say over 8 threads, and all jobs can run concurrently.</p>
-<p>We create a job script (mammoth_8thread_split_1of4.sh) that will run blast command on the first file-section only.</p>
-<p>We perform the following sequence of commands, first splitting the input fasta file into 4 parts, then creating the 4 independent job-scripts, and submit the jobs.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">## enter a interactive Job</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/mydata/blast_test/</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">## a new folder</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> split-files4</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> split-files4/</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/TAIR10_pep_4000.fasta  .</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">## split the fasta file into 4 equal(ish) sections</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> https://raw.githubusercontent.com/gmarnellos/Trinotate_example_supplement/master/split_fasta.pl <span class="kw">|</span> <span class="fu">perl</span> /dev/stdin  TAIR10_pep_4000.fasta  TAIR10_pep.vol 1000</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>create script that will spawn blast_jobs (use nano or vi) - spawn_blastp.sh</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">!#/bin/bash</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="dt">{</span><span class="dv">1</span><span class="dt">..</span><span class="dv">4</span><span class="dt">}</span><span class="kw">;</span><span class="cf">do</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">i</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="ex">sbatch</span> blastp.sh</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>make script executable <code>chmod +x spawn_blastp.sh</code></p>
-<p>Edit blast job so that each time it is called it uses a different section of the query file</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=defq       # the requested queue</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1              # number of nodes to use</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --tasks-per-node=1     # </span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=8      #   </span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem-per-cpu=11500    # in megabytes, unless unit explicitly stated</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --error=%J.err         # redirect stderr to this file</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=%J.out        # redirect stdout to this file</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=start                                 # email on job start  </span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=end                                   # email on job end</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=fail                                  # email on job failure</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Usable Environment Variables:"</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"============================="</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"hostname=</span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_ID=<span class="va">${SLURM_JOB_ID}</span> </span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS=<span class="va">${SLURM_NTASKS}</span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS_PER_NODE=<span class="va">${SLURM_NTASKS_PER_NODE}</span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_CPUS_PER_TASK=<span class="va">${SLURM_CPUS_PER_TASK}</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_CPUS_PER_NODE=<span class="va">${SLURM_JOB_CPUS_PER_NODE}</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_MEM_PER_CPU=<span class="va">${SLURM_MEM_PER_CPU}</span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="va">$0</span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load blast/2.12.0</span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="va">indir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test/split-files4"</span></span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="va">dbdir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a><span class="va">outdir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test/split-files4"</span></span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> blastp <span class="at">-num_threads</span> <span class="va">${SLURM_CPUS_PER_TASK}</span> <span class="dt">\</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>            <span class="at">-query</span> <span class="st">"</span><span class="va">${indir}</span><span class="st">/TAIR10_pep.vol.</span><span class="va">${i}</span><span class="st">.fasta"</span> <span class="dt">\</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>            <span class="at">-task</span> blastp <span class="dt">\</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>            <span class="at">-num_descriptions</span> 16 <span class="dt">\</span></span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>            <span class="at">-num_alignments</span> 1 <span class="dt">\</span></span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>            <span class="at">-db</span> <span class="va">${dbdir}</span>/TAIR10_pep <span class="dt">\</span></span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>            <span class="at">-out</span> <span class="st">"</span><span class="va">${outdir}</span><span class="st">/blastp_vol</span><span class="va">${i}</span><span class="st">_cpu</span><span class="va">${SLURM_CPUS_PER_TASK}</span><span class="st">_job</span><span class="va">${SLURM_JOBID}</span><span class="st">.txt"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Perform file-splitting procedure for both a 2-split and a 4-split of the original fasta file. The ‘time-to-solution’ results are added to the original benchmark chart. We assume that all jobs run concurrently, and we take the wall-time for the longest job</p>
-</section>
-<section id="mpi-jobs" class="level2">
-<h2 class="anchored" data-anchor-id="mpi-jobs">MPI Jobs</h2>
-<p>Our example MPI job is based on a quantum espresso calculation. This script utilises the srun command, which is part of the slurm family of tools to run a parallel job on a cluster</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=mammoth    # the requested queue</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=qe_mpi      # name the job           </span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1              # number of nodes to use</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=32            # total number of tasks (processes)</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem-per-cpu=100      # in megabytes, unless unit explicitly stated</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --error=%J.err         # redirect stderr to this file</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=%J.out        # redirect stdout to this file</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=end                                   # email on job end</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=fail                                  # email on job failure</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load  qe/6.0</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Usable Environment Variables:"</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"============================="</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"hostname=</span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_ID=<span class="va">${SLURM_JOB_ID}</span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS=<span class="va">${SLURM_NTASKS}</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS_PER_NODE=<span class="va">${SLURM_NTASKS_PER_NODE}</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_CPUS_PER_TASK=<span class="va">${SLURM_CPUS_PER_TASK}</span></span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_CPUS_PER_NODE=<span class="va">${SLURM_JOB_CPUS_PER_NODE}</span></span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_MEM_PER_CPU=<span class="va">${SLURM_MEM_PER_CPU}</span></span>
-<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"module list:"</span></span>
-<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> list <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
-<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Some of these environment variables are utilised by the qe executable itself</span></span>
-<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_DATAPATH</span><span class="op">=</span>/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/</span>
-<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_PSEUDO</span><span class="op">=</span><span class="va">${ESPRESSO_DATAPATH}</span></span>
-<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_TMPDIR</span><span class="op">=</span><span class="va">${ESPRESSO_DATAPATH}</span>/<span class="va">${SLURM_JOB_ID}</span></span>
-<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="co"># handy to place this in job output for future reference...</span></span>
-<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="va">${ESPRESSO_DATAPATH}</span>/atom.in</span>
-<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="co"># execute the parallel job (we also time it)</span></span>
-<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> srun <span class="at">-n</span> <span class="va">${SLURM_NTASKS}</span> pw.x <span class="op">&lt;</span> <span class="va">${ESPRESSO_DATAPATH}</span>/atom.in <span class="op">&gt;</span> atom.job<span class="va">${SLURM_JOB_ID}</span>.out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The job requests 32 cores to be allocated, and runs the srun command with the argument -n ${SLURM_NTASKS} which tells srun to spawn the mpi-job with the total number of processes requested. Quantum Espresso utilises the environment variable ESPRESSO_TMPDIR which points to a temporary folder. We design this in our slurm script to point to a subfolder.</p>
-<p>An alternative storage location is the compute node’s local storage. This can improve runtime I/O performance. However, local storage on the compute nodes is limited (Gigabytes not Terabytes), and it’s availability is a little hidden from the user, so take care not to fill up the disk(!) and remove all files from the compute node’s local storage within the job script (your only access to the compute node’s /local folder is via the slurm script). An alternative job script which utilises a compute node’s /local storage is provided on the gomphus server /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/example2_mpi_localstorage.sh.</p>
-</section>
-<section id="threaded-jobs" class="level2">
-<h2 class="anchored" data-anchor-id="threaded-jobs">Threaded Jobs</h2>
-<p>A number of popular bioinformatics software are capable of parallelising execution using threads (usually OpenMP or pthreads). This parallelisation method does not normally use distributed memory, so the application will need to be run on a single node. Our threaded example slurm-script is based on BLAST+. The job script is listed:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=defq</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --tasks-per-node=1</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=8</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem-per-cpu=2000</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --error=%J.err</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=%J.out</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=end</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-user=[your.email@address]</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Example slurm script</span></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  This script is a little wasteful of resources,</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  but demonstrates a simple pipeline.</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  </span></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  For a more efficient use of resources, please consider</span></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  running the pipeline as a series of jobs (chain-jobs).</span></span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Usable Environment Variables:"</span></span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"============================="</span></span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"hostname=</span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_ID=<span class="va">${SLURM_JOB_ID}</span></span>
-<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS=<span class="va">${SLURM_NTASKS}</span></span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS_PER_NODE=<span class="va">${SLURM_NTASKS_PER_NODE}</span></span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_CPUS_PER_TASK=<span class="va">${SLURM_CPUS_PER_TASK}</span></span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_CPUS_PER_NODE=<span class="va">${SLURM_JOB_CPUS_PER_NODE}</span></span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_MEM_PER_CPU=<span class="va">${SLURM_MEM_PER_CPU}</span></span>
-<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"module list:"</span></span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> list <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
-<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="va">DATAFOLDER</span><span class="op">=</span>/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example3_pipeline</span>
-<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="co">### The data used in this pipeline has already been downloaded and stored in $DATAFOLDER.</span></span>
-<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="co">### Here are the commands used to download the data...</span></span>
-<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="co"># cd $DATAFOLDER</span></span>
-<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co"># curl -LO https://data.broadinstitute.org/Trinity/Trinotate_v2.0_RESOURCES/uniprot_sprot.trinotate_v2.0.pep.gz</span></span>
-<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="co"># gunzip uniprot_sprot.trinotate_v2.0.pep.gz</span></span>
-<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="co"># curl -LO https://data.broadinstitute.org/Trinity/Trinotate_v2.0_RESOURCES/Pfam-A.hmm.gz</span></span>
-<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="co"># gunzip Pfam-A.hmm.gz</span></span>
-<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a><span class="co"># curl -L -o Trinotate.sqlite.gz https://data.broadinstitute.org/Trinity/Trinotate_v2.0_RESOURCES/Trinotate.sprot_uniref90.20150131.boilerplate.sqlite.gz</span></span>
-<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="co"># gunzip Trinotate.sqlite.gz</span></span>
-<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="co"># curl -LO ftp://ftp.ensembl.org/pub/release-82/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz</span></span>
-<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="co"># gunzip Mus_musculus.GRCm38.cdna.all.fa.gz</span></span>
-<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a><span class="co"># curl -LOgz https://github.com/gmarnellos/Trinotate_example_supplement/raw/master/mouse38_cdna.fa.gz</span></span>
-<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a><span class="co"># gunzip mouse38_cdna.fa.gz</span></span>
-<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we get on to the pipeline</span></span>
-<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a><span class="co"># make a link to all datafiles</span></span>
-<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> <span class="va">${DATAFOLDER}</span>/<span class="pp">*</span> <span class="kw">;</span> <span class="cf">do</span> <span class="fu">ln</span> <span class="at">-s</span> <span class="va">$f</span> <span class="kw">;</span> <span class="cf">done</span></span>
-<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a><span class="co">#Index the SwissProt database for use with blast</span></span>
-<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load blast</span>
-<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a><span class="ex">makeblastdb</span> <span class="at">-version</span></span>
-<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a><span class="ex">makeblastdb</span> <span class="at">-in</span> uniprot_sprot.trinotate_v2.0.pep <span class="at">-dbtype</span> prot</span>
-<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload blast</span>
-<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the Pfam database for use with hmmscan</span></span>
-<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load hmmer</span>
-<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a><span class="ex">hmmpress</span> <span class="at">-h</span></span>
-<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a><span class="ex">hmmpress</span> Pfam-A.hmm</span>
-<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load hmmer</span>
-<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Transdecoder to produce the most likely longest-ORF peptide candidates</span></span>
-<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load TransDecoder/v3.0.1</span>
-<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a><span class="ex">TransDecoder.LongOrfs</span> <span class="at">-t</span> mouse38_cdna.fa</span>
-<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a><span class="ex">TransDecoder.Predict</span> <span class="at">-t</span> mouse38_cdna.fa</span>
-<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload TransDecoder/v3.0.1</span>
-<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load blast</span>
-<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a><span class="ex">blastx</span> <span class="at">-query</span> mouse38_cdna.fa <span class="at">-db</span> uniprot_sprot.trinotate.pep <span class="at">-num_threads</span> <span class="va">${SLURM_CPUS_PER_TASK}</span> <span class="at">-max_target_seqs</span> 1 <span class="at">-outfmt</span> 6 <span class="op">&gt;</span> blastx.vol.outfmt6</span>
-<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a><span class="ex">blastp</span> <span class="at">-query</span> mouse38_cdna.fa.transdecoder.pep <span class="at">-db</span> uniprot_sprot.trinotate_v2.0.pep <span class="at">-num_threads</span> <span class="va">${SLURM_CPUS_PER_TASK}</span> <span class="at">-max_target_seqs</span> 1 <span class="at">-outfmt</span> 6 <span class="op">&gt;</span> blastp.vol.outfmt6</span>
-<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload blast</span>
-<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify protein domains</span></span>
-<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load hmmer/3.1b2</span>
-<span id="cb30-81"><a href="#cb30-81" aria-hidden="true" tabindex="-1"></a><span class="ex">hmmscan</span> <span class="at">--cpu</span> <span class="va">${SLURM_CPUS_PER_TASK}</span> <span class="at">--domtblout</span> TrinotatePFAM.out Pfam-A.hmm mouse38_cdna.fa.transdecoder.pep <span class="op">&gt;</span> pfam.log</span>
-<span id="cb30-82"><a href="#cb30-82" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload hmmer/3.1b2</span>
-<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Produce the Gene/Transcript relationship</span></span>
-<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="st">"^&gt;"</span> Mus_musculus.GRCm38.cdna.all.fa   <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-p</span> <span class="at">-e</span> <span class="st">'s/^&gt;(\S+).*\s+gene:(ENSMUSG\d+).*$/$2\t$1/'</span> <span class="op">&gt;</span> gene_transcript_map.txt</span>
-<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Now populate the sqlite database</span></span>
-<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Trinotate/v3.0.1</span>
-<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a><span class="ex">Trinotate</span> Trinotate.sqlite init <span class="at">--gene_trans_map</span> gene_transcript_map.txt <span class="at">--transcript_fasta</span> mouse38_cdna.fa <span class="at">--transdecoder_pep</span> mouse38_cdna.fa.transdecoder.pep</span>
-<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a><span class="ex">Trinotate</span> Trinotate.sqlite LOAD_swissprot_blastp blastp.vol.outfmt6</span>
-<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a><span class="ex">Trinotate</span> Trinotate.sqlite LOAD_swissprot_blastx blastx.vol.outfmt6</span>
-<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a><span class="ex">Trinotate</span> Trinotate.sqlite LOAD_pfam TrinotatePFAM.out</span>
-<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the annotation report</span></span>
-<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a><span class="ex">Trinotate</span> Trinotate.sqlite report <span class="at">-E</span> 0.00001 <span class="op">&gt;</span> trinotate_annotation_report.xls</span>
-<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> unload Trinotate/v3.0.1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This is quite a busy job-script (and also inefficient on resources!). It runs through a number of steps, but some of those steps will utilise parallelisation via threading, and use the slurm environment variable SLURM_CPUS_PER_TASK to inform the application(s) of the correct number of threads.</p>
-<p>But why is this job inefficient on resources? This particular job involves a number of steps: some utilising parallelisation, and some not; some memory-hungry, others not. The problem with this is that the job has allocated to it a set amount of resources (compute and memory), which is allocated to it for the lifetime of the job. But only at certain times in this job are the resources requested fully utilised. At all other times this job is running, the resources are allocated, but not used, and therefore making those resources unavailable to other jobs. This has a knock-on effect of increasing queue-times, and leaves expensive resources idle.</p>
-<p>A much more efficient way of running the same pipeline is to chain the job - split the pipeline into component parts and submit separate jobs for each of those parts. Each section of the pipeline (having its own job-script) is then free to allocate resources specific to that section of the pipeline. In the slurm world this is called job chaining, and has been exemplified in the next section using the same pipeline.</p>
-</section>
-<section id="job-chains-and-job-dependency" class="level2">
-<h2 class="anchored" data-anchor-id="job-chains-and-job-dependency">Job Chains and Job Dependency</h2>
-<p>Chaining jobs is a method of sequentially running dependent jobs. Our chain-job example is a pipeline of 6 separate job scripts, based on the blast+ pipeline of the previous section. We do not show the full six job-scripts here for brevity, but are available on the gomphus cluster under /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain.</p>
-<p>Slurm has an option -d or –dependency that allows to specify that a job is only permitted to start if another job finished successfully.</p>
-<p>In the folder (gomphus cluster) /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain there are 6 separate job-scripts that need to be executed in a certain order. They are numbered in the correct pipeline order:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@gomphus</span> ~]$ tree  /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step1.sh</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step2.sh</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step3.sh</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step4.sh</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step5.sh</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step6.sh</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_submit_all.sh</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> mouse38_cdna.fa</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Mus_musculus.GRCm38.cdna.all.fa</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Pfam-A.hmm</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> pipeline1.sh</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> Trinotate.sqlite</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> uniprot_sprot.trinotate_v2.0.pep</span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="ex">0</span> directories, 13 files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Each job is (importantly) commonly named using #SBATCH –job-name within each job-script. Also within this folder is a simple script (example4_submit_all.sh) that will execute the sbatch command on each of the job-scripts in the correct order:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash:</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain/example4_chain-step<span class="pp">?</span>.sh <span class="kw">;</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">sbatch</span> <span class="at">-d</span> singleton <span class="va">$c</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This sbatch command uses the -d singleton flag to notify slurm of the job-dependencies (all jobs must have the name job name defined by <code>#SBATCH --job-name [some constant name]</code>. At which point each submitted job will be forced to depend on successful completion of any previous job submitted by the same user, and with the same job-name. The full pipeline of 6 jobs will now run to completion, with no further user-intervention, making efficient use of the available resources.</p>
 
 
 </section>

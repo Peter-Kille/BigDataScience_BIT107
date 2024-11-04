@@ -1,0 +1,14 @@
+{
+  "hash": "9561f44294e23d36d06fa43a0243b9bd",
+  "result": {
+    "markdown": "---\ntitle-block-style: default\ntitle-block-banner: darkred\ntitle-block-banner-color: white\ntitle: \"Slurm Dependencies\"\nsubtitle: \"Towards Pipelines\"\nauthor: \"Prof. Peter Kille\"\ndate: today\naffiliation: \"Cardiff University\"\n---\n\n\n<body style=\"background-color:gray99;\">\n\n\n\n\n\n![](Images/logo.jpg){width=\"10%\"}\n\n# My HPC System\n\nAll HPC are slightly different and it is important to understand the specific system you are using. The current activities cover relate to the IT infrastructure provided to Big Data Masters student at Cardiff University session 2022-23. If you are not part of this class then you will need to request appropriate information about the system you have been given access to.\n\n## House Keeping\n\n\n\n\n::: {.cell}\n\n```{.bash .cell-code}\n#!/bin/bash\n#SBATCH --partition=defq       # the requested queue\n#SBATCH --nodes=1              # number of nodes to use\n#SBATCH --tasks-per-node=1     # \n#SBATCH --cpus-per-task=1      #   \n#SBATCH --mem-per-cpu=92000     # in megabytes, unless unit explicitly stated\n#SBATCH --error=%J.err         # redirect stderr to this file\n#SBATCH --output=%J.out        # redirect stdout to this file\n##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification\n##SBATCH --mail-type=start                                 # email on job start  \n##SBATCH --mail-type=end                                   # email on job end\n##SBATCH --mail-type=fail                                  # email on job failure\n\necho \"Usable Environment Variables:\"\necho \"=============================\"\necho \\$SLURM_JOB_ID=${SLURM_JOB_ID} \necho \\$SLURM_NTASKS=${SLURM_NTASKS}\necho \\$SLURM_NTASKS_PER_NODE=${SLURM_NTASKS_PER_NODE}\necho \\$SLURM_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}\necho \\$SLURM_JOB_CPUS_PER_NODE=${SLURM_JOB_CPUS_PER_NODE}\necho \\$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}\ncat $0\n\nmodule load blast/2.12.0\n\nindir=\"/mnt/clusters/sponsa/data/${USER}/blast_test\"\n\ndbdir=\"/mnt/clusters/sponsa/data/${USER}/blast_test\"\n\noutdir=\"/mnt/clusters/sponsa/data/${USER}/blast_test\"\n\ntime blastp -num_threads ${SLURM_CPUS_PER_TASK} \\\n            -query \"${indir}/TAIR10_pep_4000.fasta\" \\\n            -task blastp \\\n            -num_descriptions 16 \\\n            -num_alignments 1 \\\n            -db ${dbdir}/TAIR10_pep \\\n            -out \"${outdir}/blastp_cpu${SLURM_CPUS_PER_TASK}_job${SLURM_JOBID}.txt\"\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
