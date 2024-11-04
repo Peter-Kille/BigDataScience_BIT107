@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Prof.&nbsp;Peter Kille">
+<meta name="dcterms.date" content="2024-11-04">
+
+<title>Continers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: darkred;
+      }
+</style>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body style="background-color:gray99;" class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3.1_FAIR_data.html">Session 3: FAIR Data</a></li><li class="breadcrumb-item"><a href="./3.2_Containers.html">Continers</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Continers</h1>
+            <p class="subtitle lead">Reproducible Informatics – beyond git</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Prof.&nbsp;Peter Kille </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 4, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Big Data Biology - BIT010</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0.1_index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Big Data Science</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Session 2: HPC Cloud Slurm</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.1_HPC_Cloud_Slurm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HPC, Cloud Computing &amp; Job Schedulers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.2_Slurm_dependencies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Slurm Dependencies</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.3_MPI_stupidly_parrellel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Threads, MPI and embarrassingly parallel</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Session 3: FAIR Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1_FAIR_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FAIR Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.2_Containers.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Continers</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#reproducible-informatics-beyond-git" id="toc-reproducible-informatics-beyond-git" class="nav-link active" data-scroll-target="#reproducible-informatics-beyond-git">Reproducible Informatics – beyond git</a>
+  <ul class="collapse">
+  <li><a href="#linux-containers---from-linux-primitives-to-container-run-time-software" id="toc-linux-containers---from-linux-primitives-to-container-run-time-software" class="nav-link" data-scroll-target="#linux-containers---from-linux-primitives-to-container-run-time-software">Linux Containers - from Linux primitives to container run-time software</a></li>
+  <li><a href="#containers-vs-virtual-machines" id="toc-containers-vs-virtual-machines" class="nav-link" data-scroll-target="#containers-vs-virtual-machines">containers vs virtual machines</a></li>
+  <li><a href="#container-runtimes-dockersingularitypodman" id="toc-container-runtimes-dockersingularitypodman" class="nav-link" data-scroll-target="#container-runtimes-dockersingularitypodman">Container Runtimes – docker/singularity/podman</a></li>
+  <li><a href="#container-repositories" id="toc-container-repositories" class="nav-link" data-scroll-target="#container-repositories">Container repositories</a></li>
+  </ul></li>
+  <li><a href="#using-containers" id="toc-using-containers" class="nav-link" data-scroll-target="#using-containers">Using Containers</a>
+  <ul class="collapse">
+  <li><a href="#pulling-and-using-a-container-in-an-interactive-job" id="toc-pulling-and-using-a-container-in-an-interactive-job" class="nav-link" data-scroll-target="#pulling-and-using-a-container-in-an-interactive-job">Pulling and using a Container in an interactive job</a></li>
+  <li><a href="#example-of-pulling-down-and-running-an-ubuntu-image" id="toc-example-of-pulling-down-and-running-an-ubuntu-image" class="nav-link" data-scroll-target="#example-of-pulling-down-and-running-an-ubuntu-image">Example of pulling down and running an Ubuntu image</a>
+  <ul class="collapse">
+  <li><a href="#security-warning" id="toc-security-warning" class="nav-link" data-scroll-target="#security-warning">Security warning</a></li>
+  <li><a href="#what-next" id="toc-what-next" class="nav-link" data-scroll-target="#what-next">What next ?</a></li>
+  <li><a href="#running-scripts-and-binding-folders-to-container" id="toc-running-scripts-and-binding-folders-to-container" class="nav-link" data-scroll-target="#running-scripts-and-binding-folders-to-container">Running scripts and binding folders to container</a></li>
+  </ul></li>
+  <li><a href="#using-containers-in-slurm-scripts" id="toc-using-containers-in-slurm-scripts" class="nav-link" data-scroll-target="#using-containers-in-slurm-scripts">Using containers in Slurm scripts</a>
+  <ul class="collapse">
+  <li><a href="#security-finding-a-safe-image-to-download" id="toc-security-finding-a-safe-image-to-download" class="nav-link" data-scroll-target="#security-finding-a-safe-image-to-download">Security : Finding a safe image to download</a></li>
+  <li><a href="#using-the-sif-image" id="toc-using-the-sif-image" class="nav-link" data-scroll-target="#using-the-sif-image">Using the sif image</a></li>
+  <li><a href="#where-to-store-the-container" id="toc-where-to-store-the-container" class="nav-link" data-scroll-target="#where-to-store-the-container">Where to store the container</a></li>
+  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
+  <li><a href="#interactive-mode" id="toc-interactive-mode" class="nav-link" data-scroll-target="#interactive-mode">Interactive mode</a></li>
+  <li><a href="#slurm" id="toc-slurm" class="nav-link" data-scroll-target="#slurm">Slurm</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#building-containers-from-scratch---extension-work---only-for-greeks" id="toc-building-containers-from-scratch---extension-work---only-for-greeks" class="nav-link" data-scroll-target="#building-containers-from-scratch---extension-work---only-for-greeks">Building Containers from Scratch - Extension work - only for greeks</a>
+  <ul class="collapse">
+  <li><a href="#linux-chroot-jails" id="toc-linux-chroot-jails" class="nav-link" data-scroll-target="#linux-chroot-jails">Linux <em>chroot</em> Jails</a></li>
+  <li><a href="#filesystem-isolation" id="toc-filesystem-isolation" class="nav-link" data-scroll-target="#filesystem-isolation">filesystem isolation</a></li>
+  <li><a href="#process-isolation" id="toc-process-isolation" class="nav-link" data-scroll-target="#process-isolation">process isolation</a></li>
+  <li><a href="#resource-limitation" id="toc-resource-limitation" class="nav-link" data-scroll-target="#resource-limitation">resource limitation</a></li>
+  <li><a href="#limiting-resources-with-cgroups" id="toc-limiting-resources-with-cgroups" class="nav-link" data-scroll-target="#limiting-resources-with-cgroups">Limiting resources with cgroups</a></li>
+  <li><a href="#isolating-processes-with-namespaces" id="toc-isolating-processes-with-namespaces" class="nav-link" data-scroll-target="#isolating-processes-with-namespaces">Isolating processes with Namespaces</a></li>
+  <li><a href="#putting-it-all-together" id="toc-putting-it-all-together" class="nav-link" data-scroll-target="#putting-it-all-together">Putting it all together</a></li>
+  <li><a href="#cleaning-up" id="toc-cleaning-up" class="nav-link" data-scroll-target="#cleaning-up">Cleaning up</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p><img src="Images/logo.jpg" class="img-fluid" style="width:10.0%"></p>
+<section id="reproducible-informatics-beyond-git" class="level1">
+<h1>Reproducible Informatics – beyond git</h1>
+<section id="linux-containers---from-linux-primitives-to-container-run-time-software" class="level2">
+<h2 class="anchored" data-anchor-id="linux-containers---from-linux-primitives-to-container-run-time-software">Linux Containers - from Linux primitives to container run-time software</h2>
+<p>Linux containers are a method of isolating running process from the host system. Containers will provide:</p>
+<ul>
+<li>filesystem isolation</li>
+<li>process isolation</li>
+<li>resource limitations, and</li>
+<li>network isolation (not discussed in this tutorial)</li>
+</ul>
+<p>We will discover exactly what these mean as we progress through the tutorial.</p>
+</section>
+<section id="containers-vs-virtual-machines" class="level2">
+<h2 class="anchored" data-anchor-id="containers-vs-virtual-machines">containers vs virtual machines</h2>
+<p>Any introductory course on containers will almost always start with a comparison of containers vs.&nbsp;virtual machines. (I am unsure how useful this actually is to students undertaking their first course on Linux, they may well meet containers before even coming across Virtual Machines). Assuming you’re aware of both, we provide a brief comparison now:</p>
+<p>In effect, virtual machines virtualise hardware, and containers will virtualise the Linux kernel. Virtual machines will run their own Linux kernel on top of virtualised hardware; containers will share the host’s kernel. This means any processes in a virtual machine will often need to pass through two separate kernels to perform a given task; conversely, any interaction with hardware from processes within a container, need only deal with the single host kernel. This often means that container processes have little overhead, and processes are handled at host-native speeds. Whereas virtual machine processes have more overhead and will often suffer in performance.</p>
+</section>
+<section id="container-runtimes-dockersingularitypodman" class="level2">
+<h2 class="anchored" data-anchor-id="container-runtimes-dockersingularitypodman">Container Runtimes – docker/singularity/podman</h2>
+<p>The above tutorial built up a container using linux primitives alone. This is obviously a rather cumbersome approach to creating containers and container images. The following set of tools are some of the, perhaps, more well-known container runtime engines and container image and management software.</p>
+<ul>
+<li>docker*</li>
+<li>podman*</li>
+<li>containerd</li>
+<li>systemd-nspawn</li>
+<li>charliecloud*</li>
+<li>singularity*</li>
+</ul>
+<p>These container runtime engines are (mostly) command-line tools that make creating, updating, packaging, distributing, and running containers significantly easier than using the Linux primitives we met earlier. This allowed them to become very popular with system administrators, and also program developers to distribute their software. These tools, at their core, do exactly what we did with the Linux primitives, but abstract many of the complexities away from managing cgroups, namespaces, and chroot, but in a more convenient way.</p>
+<p>Those container run-time engines marked with the ‘*’, above, are the container run-time engines that computational scientists are most likely to come across. Docker/Podman have very similar features to one another, and are best suited to personal desktops/laptops (i.e.&nbsp;single tenancy systems). Singularity/Charliecloud are also very similar to one another, and will often be available to researchers on multi-tenancy HPC clusters.</p>
+<p>The reason that Docker/Podman** are not suitable to multi-tenancy systems is that by default containers run as the root user. If you launch a container with docker, unless you specify a specific user, you’re going to run that container as the root user. And this is the same root user inside the container as the root on the host (much the same as in our Linux primitives tutorial above). In addition, when providing a non-privileged user access to the docker runtime, that user can easily get access to the host’s root account with just a few Docker commands - an obvious security risk in multi-tenancy environments.</p>
+<p>** Podman in fact does have some mechanism to not run as the host’s root inside the container, but it’s still not often found on multi-tenancy servers.</p>
+<p>Conversely, the container run-time engines of Singularity and Charliecloud are safe to run in multi-tenancy environments. These run-time engines use a more recent kernel feature of <em>User Namespaces</em>. These are like the namespaces we met in the above <em>chroot</em> tutorial, except that a “<em>root</em>” user inside the container is mapped to a non-privileged user on the host. This is all handled by the Linux kernel - so no new security boundary exists (we’ve already accepted the Linux kernel as safe).</p>
+</section>
+<section id="container-repositories" class="level2">
+<h2 class="anchored" data-anchor-id="container-repositories">Container repositories</h2>
+<ul>
+<li><p>(Docker)[<a href="https://hub.docker.com/" class="uri">https://hub.docker.com/</a>]</p></li>
+<li><p>(Singularity)[sylabs.io]</p></li>
+<li><p>Podman – Search within application - podman search <search_term></search_term></p></li>
+<li><p>(Charliecloud)[<a href="https://github.com/hpc/charliecloud" class="uri">https://github.com/hpc/charliecloud</a>]</p></li>
+</ul>
+<div class="greeting message" style="color: red;">
+<p>Use Docker hub to identify a containers that would support fastqc, trimmomatic (or fastp) and multiqc.</p>
+<ul>
+<li><p>How would you judge a container is valid and ‘safe’ to use</p></li>
+<li><p>Can you identify a container that has all the of the programs</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="using-containers" class="level1">
+<h1>Using Containers</h1>
+<section id="pulling-and-using-a-container-in-an-interactive-job" class="level2">
+<h2 class="anchored" data-anchor-id="pulling-and-using-a-container-in-an-interactive-job">Pulling and using a Container in an interactive job</h2>
+<p>Running interactive <em>Singularity</em> containers is simple:</p>
+<ol type="1">
+<li>Pull image (or use an existing one)</li>
+<li>Create and enter an interactive slurm job</li>
+<li>Run and enter the Singularity container</li>
+</ol>
+<p>(The final two steps could also be combined into one command.)</p>
+</section>
+<section id="example-of-pulling-down-and-running-an-ubuntu-image" class="level2">
+<h2 class="anchored" data-anchor-id="example-of-pulling-down-and-running-an-ubuntu-image">Example of pulling down and running an Ubuntu image</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Enter interactive node on defq</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Load latest singularity module</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load apptainer/1.3.4</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">##make and enter a directory for your containers within your mydata directory</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/scratch</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> singularity</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> singularity/</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">##Create cache and point the singularity cache directory</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> cache</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">APPTAINER_TMPDIR</span><span class="op">=</span>~/scratch/singularity/cache/</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">APPTAINER_CACHEDIR</span><span class="op">=</span>~/scratch/singularity/cache/</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">## Create and enter a working folder</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> working</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> working/</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">## Pull ubuntu version 20.04 from Docker Hub and store as .sif image</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> pull ubuntu.sif docker://ubuntu:20.04</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Run singularity container</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># --contain is optional but will ensure $HOME is not auto mounted</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> run <span class="at">--contain</span> ubuntu.sif</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># You should now find yourself within the container</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ex">Singularity</span><span class="op">&gt;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Try checking the operating system by running</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> /etc/os-release</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># If working this should be Ubuntu if not working then RockyLinux (iago OS)</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># To exit container</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="security-warning" class="level3">
+<h3 class="anchored" data-anchor-id="security-warning">Security warning</h3>
+<p>The <strong>--contain</strong> option when running a container is considered optional in singularity but <strong>essential</strong> by the BiocomputingHub. By default Singularity will try to auto-mount your $HOME folder into the container. While this may not seem like an issue, if you are pulling down an unknown Docker Hub image (or using a .sif file created by someone else) this potentially could be compromised in some form. For example if it has a runscript to delete all files and folders on the mounted home drive then it could potentially wipe your home drive (or anything else you have mounted). Singularity runs with the same permission inside the container as outside the container for security, no critical protected files will be removed if you do not have permission to delete them.</p>
+</section>
+<section id="what-next" class="level3">
+<h3 class="anchored" data-anchor-id="what-next">What next ?</h3>
+<p>The ubuntu image is pretty useless by itself but serves as a good demo, there are however multiple pre-made images on Docker Hub that can be downloaded and used in Singularity (<a href="https://hub.docker.com/" class="uri">https://hub.docker.com/</a>). Something more useful would be an up to date python image, such as python:3.9.12-buster</p>
+<p>Follow the previous guide up to the step where you pull down the image…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pull Python version 3.9.12 from Docker Hub and store as .sif image</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> pull python3.9.12.sif docker://python:3.9.12-buster</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the container in singularity</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> run <span class="at">--contain</span> python3.9.12.sif</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">Python</span> 3.9.12 <span class="er">(</span><span class="ex">main,</span> Apr 20 2022, 18:47:18<span class="kw">)</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">[GCC</span> 8.3.0] on linux</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">"help"</span>, <span class="st">"copyright"</span>, <span class="st">"credits"</span> or <span class="st">"license"</span> for more information.</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You will notice that unlike the ubuntu image this launches straight into the python application. This is caused by the singularity runscript that is set within the container. To check what the runscript will do on run, you can run this command outside of the container :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> inspect <span class="at">-r</span> python3.9.12.sif</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># At the top of the resulting text you will see something like:</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="va">OCI_ENTRYPOINT</span><span class="op">=</span><span class="st">''</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="va">OCI_CMD</span><span class="op">=</span><span class="st">'"python3"'</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="va">CMDLINE_ARGS</span><span class="op">=</span><span class="st">""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The OCI_CMD is the command running inside the container on launch, for the python container this is launching python3. If you want to launch the container without auto launching python3 (without the runscript) then you can use singularity shell, using the python container as an example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> shell <span class="at">--contain</span> python3.9.12.sif </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Singularity</span><span class="op">&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="running-scripts-and-binding-folders-to-container" class="level3">
+<h3 class="anchored" data-anchor-id="running-scripts-and-binding-folders-to-container">Running scripts and binding folders to container</h3>
+<p>As well as run and shell the other most useful command is <strong>exec</strong>, this allows you to execute a command when the container is launched.</p>
+<p>For example to run a simple Python script.</p>
+<p>Make a demo python script called example.py with the following contents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/python3</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="st">'This is a demo python script'</span><span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Make it executable</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x example.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To be able to run the example.py script within the container you have to make the folder location accessible within the container. The easiest way to do this is to bind (mount/attach) the folder to a specified location within the container using the <strong>-B</strong> option.</p>
+<p>Assume that example.py is located at <code>/mnt/clusters/sponsa/data/$USER/script</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> exec <span class="at">--contain</span> <span class="at">-B</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/script:/mnt/clusters/sponsa/data/<span class="va">$USER</span>/script python3.9.12.sif <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>python /mnt/clusters/sponsa/data/<span class="va">$USER</span>/script/example.py</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> This <span class="ex">is</span> a demo python script</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This command is mounting the <code>/mnt/clusters/sponsa/data/$USER/script</code> folder to the same location within the <code>python.sif</code> container, then executing the python command with the example.py script.</p>
+<p>The output is passed back outside the container and the container is automatically killed as it has no other tasks to perform.</p>
+<p>You do not need to bind to the same location as the folder (/mnt/clusters/sponsa/data/$USER/script…) but it’s pretty confusing if you don’t !!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> exec <span class="at">--contain</span> <span class="at">-B</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/script:/bind python3.9.12.sif python /bind/example.py</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> This <span class="ex">is</span> a demo python script</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="using-containers-in-slurm-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="using-containers-in-slurm-scripts">Using containers in Slurm scripts</h2>
+<p>This is a workflow of how to safely pull and convert an existing docker image from Docker Hub. Docker Hub is a cloud based repository used mainly for storing and distributing container images.</p>
+<p>One of the benefits of Singularity is the ability to convert Docker images into Singularity images.</p>
+<p>For this workflow we will be pulling and converting a container image for fastqc, this is a popular program used for quality assesses NGS data.</p>
+<p><br><strong>Not all Docker container images will work in Singularity, Docker requires root access to run.<br>Singularity on gomphus runs without any root access so the container images are immutable.<br></strong> <br></p>
+<section id="security-finding-a-safe-image-to-download" class="level3">
+<h3 class="anchored" data-anchor-id="security-finding-a-safe-image-to-download">Security : Finding a safe image to download</h3>
+<p>Any docker user can upload to Docker Hub, please do not automatically assume all of these images are safe and working correctly !</p>
+<p>To find a safe image to download then treat Docker Hub the same as downloading software from any internet site.</p>
+<p>Searching for fastqc on Docker Hub (<a href="https://hub.docker.com/search?q=fastqc" class="uri">https://hub.docker.com/search?q=fastqc</a>) brings up lots of container images. Look for those images from reliable sources (such as the application creator), updated relatively recently, with a large number of downloads and if possible stars (these are given by previous users).</p>
+<p>(Often official image are listed on the github sites of the software - this is not the case for fastqc as it is predates container use)</p>
+<p><br> ### Pulling the image</p>
+<p>Run the usual setup procedure to create a singularity environment, it’s important to set the cachedir as some container images will be bigger than your %HOME space.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Enter interactive node on defq (epyc could also be used)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load latest singularity module</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load singularity/3.8.7</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Point the singularity cache directory</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SINGULARITY_TMPDIR</span><span class="op">=</span>/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/cache/</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SINGULARITY_CACHEDIR</span><span class="op">=</span>/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/cache</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Enter working folder</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Pull the container image with the following command. To ensure reproducibly in some form it’s better to use the tag specifying the version number in the pull command. Also name your sif file with a similar tag for future reference.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> pull fastqc.sif docker://staphb/fastqc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This will start downloading the image layers and converting to .sif. The process can take a while so be patient, when nearly finished you will see ‘Creating SIF file…’</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">INFO:</span>    Converting OCI blobs to SIF format</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">INFO:</span>    Starting build...</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Getting</span> image source signatures</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Copying</span> blob 7595c8c21622 done  </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Copying</span> blob d13af8ca898f done  </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Copying</span> blob 70799171ddba done</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">INFO:</span>    Creating SIF file...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="using-the-sif-image" class="level3">
+<h3 class="anchored" data-anchor-id="using-the-sif-image">Using the sif image</h3>
+<p><strong>Do not run the sif image, you will not be able to find out what it does until it’s too late</strong>,start by inspecting the runscript (what it will do when run) inside the image using:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> inspect <span class="at">-r</span> fastqc.sif</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This shows the runscript as running <strong>OCI_CMD=‘“/bin/bash”’</strong>, so will simply run a bash prompt inside the container which is a good start.</p>
+<p>Now try entering the container, I would advise ignoring the runscript option and using ‘singularity shell’ to open a shell inside the container. Remember to also use <strong>–contain</strong>, this will isolate the container and prevent it from mounting your $HOME folder which would be a big security risk on unknown containers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> shell <span class="at">--contain</span> fastqc.sif</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This should put you inside the container with a Singularity&gt; prompt. Run some commands to verify the container is what you expect it to be. For example checking for operating system version and in this case checking the Trinity version matches what was specified on the docker tags. Exit the container when finished.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OS version</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Singularity</span><span class="op">&gt;</span> cat /etc/os-release </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">NAME</span><span class="op">=</span><span class="st">"Ubuntu"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="va">VERSION</span><span class="op">=</span><span class="st">"16.04.7 LTS (Xenial Xerus)"</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="va">ID</span><span class="op">=</span>ubuntu</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="va">ID_LIKE</span><span class="op">=</span>debian</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="va">PRETTY_NAME</span><span class="op">=</span><span class="st">"Ubuntu 16.04.7 LTS"</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="va">VERSION_ID</span><span class="op">=</span><span class="st">"16.04"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="va">HOME_URL</span><span class="op">=</span><span class="st">"http://www.ubuntu.com/"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="va">SUPPORT_URL</span><span class="op">=</span><span class="st">"http://help.ubuntu.com/"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="va">BUG_REPORT_URL</span><span class="op">=</span><span class="st">"http://bugs.launchpad.net/ubuntu/"</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="va">VERSION_CODENAME</span><span class="op">=</span>xenial</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="va">UBUNTU_CODENAME</span><span class="op">=</span>xenial</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Trinity version</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="ex">Singularity</span><span class="op">&gt;</span> fastqc <span class="at">-v</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="ex">perl:</span> warning: Setting locale failed.</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="ex">perl:</span> warning: Please check that your locale settings:</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        <span class="ex">LANGUAGE</span> = <span class="er">(</span><span class="bu">unset</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        <span class="ex">LC_ALL</span> = <span class="er">(</span><span class="bu">unset</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="ex">LANG</span> = <span class="st">"en_GB.UTF-8"</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">are</span> supported and installed on your system.</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="ex">perl:</span> warning: Falling back to the standard locale <span class="er">(</span><span class="st">"C"</span><span class="kw">)</span><span class="bu">.</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="ex">FastQC</span> v0.11.9</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co"># exit container</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="ex">Singularity</span><span class="op">&gt;</span> exit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="where-to-store-the-container" class="level3">
+<h3 class="anchored" data-anchor-id="where-to-store-the-container">Where to store the container</h3>
+<p>Once verified you can move the fastqc.sif anywhere you need. If storing the containers for any period of time just remember that any security issues or bugs will also remain in the container, they are essentially locked in time.</p>
+<p><br></p>
+</section>
+<section id="reproducibility" class="level3">
+<h3 class="anchored" data-anchor-id="reproducibility">Reproducibility</h3>
+<p>It’s important to document how the container was pulled or built, that way it can be re-created or updated if required again in the future. As a researcher you will also want to aid reproducibility of your workflow by at least recording any relevant versions of code or container-images. So you may want to rename this container with its version.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> fastqc.sif fastqcv0.11.9.sif</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="interactive-mode" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-mode">Interactive mode</h3>
+<p>Let’s use the fastqc.sif image to run interactively, including binding a directory to run some tests. We will be using sample_data from Session5 RNAseq-Processing <code>/mnt/clusters/sponsa/data/classdata/Bioinformatics/Session5/RNAseq-Processing/fastq/SRR*.fastq</code></p>
+<p>Create an interactive node on the defq partition.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load singularity module</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load singularity/3.8.7</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /mnt/clusters/sponsa/data/classdata/Bioinformatics/Session5/RNAseq-Processing/fastq/SRR<span class="pp">*</span>.fastq .</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To use the test data we need to make that folder accessible inside the container. We could bind the complete <code>/mnt/clusters/sponsa/data/$USER/</code> folder but it’s more secure to only bind the folder(s) you require inside the container. You can specify where the folder is mounted inside the container but I will use the same folder location as outside the container to make it easier to remember.</p>
+<p><br><strong>As we are using –contain to protect the home folder it’s a good idea to change to a working directory where you have full write access. Using –pwd is a simple way of setting the default folder on container launch<br></strong> <br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use --bind or -B to bind folder</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># use --contain to prevent mounting of home folder</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> shell <span class="at">--contain</span> <span class="at">--bind</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/:/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/ <span class="at">--pwd</span> <span class="dt">\</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/  /mnt/clusters/sponsa/data/<span class="va">${USER}</span>/singularity/working/fastqcv0.11.9.sif</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># You should now see the singularity&gt; prompt inside the container</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># test if sample data is attached correctly</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span><span class="op">&gt;</span> ls /mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once inside the container you can run standard trinity commands, you may need to specify output locations. If the output tries to write to an area outside of your mounted/bound folder it will either fail due to lack of permissions (images are read only) or it will appear to write but dissapear when the container is exited.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run a standard fastqc command within container</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fastqc</span> <span class="at">-t</span> 4 SRR<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+</section>
+<section id="slurm" class="level3">
+<h3 class="anchored" data-anchor-id="slurm">Slurm</h3>
+<p>Once confident that the container image does the job you require you can wrap it into a slurm script to automate the process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=defq       # the requested queue</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --nodes=1              # number of nodes to use</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --tasks-per-node=1     #</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=4      #   </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --mem=8G     # in megabytes, unless unit explicitly stated</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --error=%J.err         # redirect stderr to this file</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=%J.out        # redirect stdout to this file</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-user=[insert email address]@Cardiff.ac.uk  # email address used for event notification</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">##SBATCH --mail-type=all                                   # email on job start, failure and end</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Some Usable Environment Variables:"</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"================================="</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"hostname=</span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_ID=<span class="va">${SLURM_JOB_ID}</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS=<span class="va">${SLURM_NTASKS}</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_NTASKS_PER_NODE=<span class="va">${SLURM_NTASKS_PER_NODE}</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_CPUS_PER_TASK=<span class="va">${SLURM_CPUS_PER_TASK}</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_JOB_CPUS_PER_NODE=<span class="va">${SLURM_JOB_CPUS_PER_NODE}</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="dt">\$</span>SLURM_MEM_PER_CPU=<span class="va">${SLURM_MEM_PER_CPU}</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Write jobscript to output file (good for reproducability)</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="va">$0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Load the singularity module and then set the location of the .sif container image. The TOTAL_RAM variable simply converts ${SLURM_MEM_PER_NODE} back into GB, trinity can only use GB and slurm tends to convert GB to MB. WORKINGFOLDER in this case is the location of the test data and what we will also use as default folder within the container, as it will be set to our external bound folder it will have full read&amp;write access. The BINDS variable will container any folders you wish to bind into the container, you can specify multiple folders seperated by ‘,’. You need to specify the iago location of the folder and then the mount point within the container.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load singularity module</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load singularity/3.8.7</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set singularity image</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="va">SINGIMAGEDIR</span><span class="op">=</span>/mnt/clusters/sponsa/data/<span class="va">${USER}</span>/singularity/working/</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="va">SINGIMAGENAME</span><span class="op">=</span>fastqcv0.11.9.sif</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Set working directory </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="va">WORKINGFOLDER</span><span class="op">=</span>/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/test_data/</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># set folders to bind into container</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">BINDS</span><span class="op">=</span><span class="st">"</span><span class="va">${BINDS}</span><span class="st">,</span><span class="va">${WORKINGFOLDER}</span><span class="st">:</span><span class="va">${WORKINGFOLDER}</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To be able to run a Trinity script inside the container the script needs to be in a location that is accessible within the container, the easiest folder in this case is the WORKINGFOLDER. You can either generate a bash script (trinity_source_commands.sh) as part of the sbatch script or link to an existing script. Adding the commands to the sbatch script is better for reproducability, having a seperate script is more likely to be forgotten in a few months but the choice is yours.</p>
+<p>The Trinity commands are pretty standard, but we make use of the WORKINGFOLDER variable and slurm environment variables to declare RAM and CPU. I like to echo the TOTAL_RAM AND CPU to the output file (JOBID.out) to check the conversion worked correctly and the CPU total is also matching, obviously not essential.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">############# SOURCE COMMANDS ##################################</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;</span><span class="va">${WORKINGFOLDER}</span>/fastqc_source_commands.sh <span class="op">&lt;&lt;EOF</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st">fastqc -t </span><span class="va">${SLURM_CPUS_PER_TASK}</span><span class="st"> SRR*</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="st">echo TOTAL_RAM=</span><span class="va">${TOTAL_RAM}</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="st">echo CPU=</span><span class="va">${SLURM_CPUS_PER_TASK}</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="op">EOF</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">################ </span><span class="re">END</span><span class="co"> OF SOURCE COMMANDS ######################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is the magic command that sets up the singularity container environment, binds requested drives, sets the working directory and then executes the bash script inside of the container.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">singularity</span> exec <span class="at">--contain</span> <span class="at">--bind</span> <span class="va">${BINDS}</span> <span class="at">--pwd</span> <span class="va">${WORKINGFOLDER}</span> <span class="va">${SINGIMAGEDIR}</span>/<span class="va">${SINGIMAGENAME}</span> bash <span class="va">${WORKINGFOLDER}</span>/fastqc_source_commands.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is the same as all slurm jobs where a JOBID will be created and queued within the slurm queue, on completion of the script the container and job will close. The slurm logs .out and .err will contain the job details so please check on completion.</p>
+</section>
+</section>
+</section>
+<section id="building-containers-from-scratch---extension-work---only-for-greeks" class="level1">
+<h1>Building Containers from Scratch - Extension work - only for greeks</h1>
+<section id="linux-chroot-jails" class="level2">
+<h2 class="anchored" data-anchor-id="linux-chroot-jails">Linux <em>chroot</em> Jails</h2>
+<p>Jails are similar to containers (although cannot quite be classed as a container because by themselves they do not fit the isolation criteria). Nonetheless, we will start our journey with jails, because all the tools needed to create jails are usually already available by default on any Linux system.</p>
+<p>Jails have been available to Linux since the 1980’s (long before containers were introduced to the Linux kernel, around 2006). Jails provide a method of isolating the filesystem, so that the jail cannot see the host’s filesystem. During this tutorial we will further implement limitations on the jail, isolating various other aspects of the host system away from the jail, to the point where we convert our jail to a full-fledged container.</p>
+<p>First of all, we want to virtualise a linux system, so let’s start by building up a typical linux filesystem - like the one listed above. Download the Alpine minirootfs and unpack. Alpine is a well-known and (very) lightweight linux distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> alpine <span class="kw">&amp;&amp;</span> <span class="ex">curl</span> <span class="at">-L</span> https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-minirootfs-3.16.2-x86_64.tar.gz   <span class="kw">|</span> <span class="fu">tar</span> xvzf <span class="at">-</span> <span class="at">-C</span> alpine</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for the purposes of this tutorial only: add a file to alpine, to help with navigation when switching between host and jail.</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> alpine/in_alpine</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># change ownership to the alpine folder to root (recursively)</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chown <span class="at">-R</span> root:root alpine/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Take a look at the resulting <em>alpine</em> folder, and you should see something similar to the filesystem tree shown above.</p>
+</section>
+<section id="filesystem-isolation" class="level2">
+<h2 class="anchored" data-anchor-id="filesystem-isolation">filesystem isolation</h2>
+<p>Create and enter a chroot jail. The following command will create a jail, and run the <em>/bin/sh</em> process within that jail. You can exit the chroot jail whenever you like by typing <em>exit</em> or <em>ctrl-d</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chroot alpine /bin/sh <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This jail provides us with filesystem isolation. Look around the filesystem within the jail, and you will see no way out to the host filesystem.</p>
+</section>
+<section id="process-isolation" class="level2">
+<h2 class="anchored" data-anchor-id="process-isolation">process isolation</h2>
+<p>However, this chroot jail does nothing about process-isolation, network-isolation, or resource-limitation. In fact, probing for any information about any processes currently fails (even processes within the chroot jail itself). This is because the <em>/proc</em>, <em>/sys</em>, and <em>/dev</em> pseudo-filesystems have not yet been made available to the chroot jail, so therefore the jail has no route to probe the linux kernel. Let’s fix that now, and mount the pseudo-filesystems.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we're still in the jail</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mount</span> <span class="at">-t</span> proc none /proc</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mount</span> <span class="at">-t</span> sysfs none /sys</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mount</span> <span class="at">-t</span> devtmpfs none /dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can prove that no process-isolation takes place. Because the chroot jail now has access to the host kernel (because of our mounted /proc, /sys, and /dev), we can now probe the running processes from inside the chroot jail. Running</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">top</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># press 'q' to exit when ready to do so</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>you can see not only the running processes inside the chroot jail, but all processes running on the host system. i.e.&nbsp;there is no process isolation within this chroot jail.</p>
+</section>
+<section id="resource-limitation" class="level2">
+<h2 class="anchored" data-anchor-id="resource-limitation">resource limitation</h2>
+<p>To test our chrooot jails for resource limitation, we will create a chroot jail (with the mounted kernel folders), and install some stress-test software to see if there is any limitation to how many resources we can consume (answer: resources are not restrained in any way).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chroot alpine /bin/sh <span class="at">-l</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># provide the chroot with access to the google dns service</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'nameserver 8.8.8.8 &gt;/etc/resolv.conf</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="st">#</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="st"># install some software (apk is the alpine package manager)</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="st">apk add python3 python3-dev gcc linux-headers musl-dev bash</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that some useful software is installed into our <em>chroot</em> image, exit and re-enter the <em>chroot</em> jail, this time with a slightly more useful <em>shell</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ctrl-d to exit the chroot jail, then re-enter</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chroot alpine /bin/bash <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we’re back inside the <em>chroot</em> jail, let’s install our stress-test software:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv /opt/pycont <span class="at">--clear</span> <span class="at">--copies</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> /opt/pycont/bin/activate</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install stress</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s stress out our <em>chroot</em> jail.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this commands will run $THREADS threads.</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="va">THREADS</span><span class="op">=</span>16</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="ex">stress</span> <span class="at">-c</span> <span class="va">$THREADS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can check out the cpu usage from a terminal on the host machine. You can choose any number of threads, you will find the only cpu-limit is that of the hardware of your host machine.</p>
+<p>So, we have seen that chroot jails will isolate a filesystem, but does not limit resources, or isolate processes.</p>
+</section>
+<section id="limiting-resources-with-cgroups" class="level2">
+<h2 class="anchored" data-anchor-id="limiting-resources-with-cgroups">Limiting resources with cgroups</h2>
+<p>In order to limit processes to a certain amount of resource (CPU, RAM), one can use <em>cgroups</em> (Control Groups). <em>cgroups</em> is a Linux kernel feature that will allow the limitation of resources (CPU, RAM) available to a process. And because UNIX processes are hierarchical, children of the <em>cgroup</em>’d process are in the same cgroup and will contribute to the same limit.</p>
+<p>Let’s set up a <em>cgroup</em> and attach our chroot jail to it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> cgcreate <span class="at">-a</span> <span class="va">$USER</span> <span class="at">-g</span> memory,cpuset:alpine-jail</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This will set up a cgroup within the linux kernel, called <em>alpine-jail</em>, owned by the $USER that ran the command. We can see the setup within the kernel <em>/sys</em> folder:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> /sys/fs/cgroup/<span class="pp">*</span>/alpine-jail  <span class="co">#* list the contents of multiple alpine-jail folders </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Limit the resources available to this cgroup by making changes to the kernel data-structures:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note, since the user $USER owns this data-structure, sudo access is not necessary</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Limit RAM to 4GB</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> 2000000000 <span class="op">&gt;</span> /sys/fs/cgroup/memory/alpine-jail/memory.limit_in_bytes</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limit the cgroup to use the first 5 CPUs only</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> 0-4 <span class="op">&gt;</span> /sys/fs/cgroup/cpuset/alpine-jail/cpuset.cpus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can create the chroot jail, this time running under our newly created cgroup.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> cgexec <span class="at">-g</span> memory,cpuset:alpine-jail  chroot alpine /bin/bash <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>While within the chroot jail, run the stress command and check out <em>top</em> from a host terminal.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span> opt/pycont/bin/activate</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="ex">stress</span> <span class="at">-c</span> 10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Because we limited the cgroup to cpus 0-4 only, our chroot jail only has 5 cpus from the host available to it. By running <em>stress</em> across 10 cpus, you should see that the process is limited, and 10 threads are being shared across 5 cpus, each thread running at approximately 50% cpu usage.</p>
+<p>Our chroot jail can now almost be classed as a container. All that is left is for us to do is isolate processes.</p>
+</section>
+<section id="isolating-processes-with-namespaces" class="level2">
+<h2 class="anchored" data-anchor-id="isolating-processes-with-namespaces">Isolating processes with Namespaces</h2>
+<p>Our next target for creating a full-fledged container, is to limit our virtual linux environment to have access to list and probe it’s own processes only. That is, the jail should not be able to see any information about any processes that were not spawned within that jail. Unsurprisingly, the Linux kernel has a feature to do exactly that. These are called <em>Namespaces</em>. Namespaces allow us to hide processes from other processes. There are many different types of Namespaces (process, network, mount, and more), and their description are beyond the scope of this tutorial. But for our purposes, we will simply bundle up the relevant Namespaces into a single command. And the command we will now introduce, is called <em>unshare</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> unshare  <span class="at">--mount</span> <span class="at">--uts</span> <span class="at">--ipc</span> <span class="at">--pid</span> <span class="at">--fork</span> <span class="at">--user</span> <span class="at">--map-root-user</span> chroot alpine /bin/bash</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The above unshare command will create a new namespace for the chroot alpine jail. This namespace is a new environment that’s isolated on the system with its own processes (PIDs), and mounts (volumes) etc.</p>
+<p>By running the above Namespaced jail, we immediately enter the isolated environment. And since we have restricted mounts (check out the unshare arguments), we are not able to mount all the psuedo-filesystems as we did previously. However, just mounting the /proc filesystem will suffice:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mount</span> <span class="at">-t</span> proc none /proc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, running the top command, we can see we have isolated processes - the only processes listed are those that have been spawned from within the jail/container. That is, we are not able to see any information about processes on the host.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">top</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We have now used the kernel feature <em>Namespaces</em> to protect the host processes from the container processes.</p>
+<p>Next, we will collate what we have learned, and form a command that will create a truly isolated container runtime, using linux primitives and kernel features alone.</p>
+</section>
+<section id="putting-it-all-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-it-all-together">Putting it all together</h2>
+<p>Having run through all our isolation techniques, the following command will create a container from using Linux primitives only.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># assumes the cgroup has been cerated</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span>  cgexec <span class="at">-g</span> memory,cpuset:alpine-jail  <span class="dt">\</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  unshare  <span class="at">--mount</span> <span class="at">--uts</span> <span class="at">--ipc</span> <span class="at">--pid</span> <span class="at">--fork</span> <span class="at">--user</span> <span class="at">--map-root-user</span> <span class="dt">\</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  chroot alpine /bin/bash</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># you may need to mount the /proc filesystem again</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mount</span> <span class="at">-t</span> proc none /proc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The command may look a little complicated, but we have met all the components of this command separately throughout this tutorial: the <em>chroot</em> will isolate a filesystem; the <em>unshare</em> will isolate the processes; and the <em>cgexec</em> will limit the resources.</p>
+</section>
+<section id="cleaning-up" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-up">Cleaning up</h2>
+<p>To clean up the chroot jail, exit the jail, then unmount the pseudo-filesystems..</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> sudo umount alpine/proc alpine/sys alpine/dev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
