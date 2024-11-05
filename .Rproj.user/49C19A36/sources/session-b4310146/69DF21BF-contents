@@ -181,7 +181,7 @@ If you would like to comment out certain slurm commands in your job-script, simp
 Some further useful (but not exhaustive) SBATCH options are detailed:
 
 | SBATCH option     | Description                                                                                                                                                     |
-|----------------------|--------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | --ntasks-per-node | allocate n tasks per allocated node.                                                                                                                            |
 | --nodes           | set the number of nodes that the job will require. Each node will have --ntasks-per-node processes started                                                      |
 | --ntasks          | spawn n tasks (default=1). This determines how many processes will be spawned (for MPI jobs).                                                                   |
@@ -385,8 +385,7 @@ gomphus.job_history.sh
 ::: callout-important
 ## Exercise: Make your instance based transcriptomic processes slurm compatible
 
-In Session 5 of you bioinformatics introductory lectures you were given scripts to pre-process, map, count and call duplicates - [RNAseq Processing](https://peter-kille.github.io/Bioinformatics_TrainingWeb/5.1_RNAseq_processing.html).  I want you to transfer these and the data to scratch and convert these to slurm compatible scripts.
-
+In Session 5 of you bioinformatics introductory lectures you were given scripts to pre-process, map, count and call duplicates - [RNAseq Processing](https://peter-kille.github.io/Bioinformatics_TrainingWeb/5.1_RNAseq_processing.html). I want you to transfer these and the data to scratch and convert these to slurm compatible scripts.
 :::
 
 ::: {.callout-note collapse="true"}
@@ -408,20 +407,20 @@ curl -L -o TAIR10_pep.fasta  https://www.arabidopsis.org/download_files/Proteins
 srun -c 4 --mem=8G -p defq --pty bash
 
 ## navigate to mydata directory
-cd ~/mydata/
+cd ~/scratch/
 
 ## make a dirctory for blast test
 mkdir -p blast_test && cd blast_test 
 
 ## copy TAIR file accross from class data to local file system
-cp /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/run2_split-files4/TAIR10_pep.fasta .
+cp ~/classdata/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/run2_split-files4/TAIR10_pep.fasta .
 
 ## Makeblast db from downloaded file
 module load blast/2.12.0
 makeblastdb -in TAIR10_pep.fasta -parse_seqids -dbtype prot -title "Small protein database" -out TAIR10_pep
 
 ##copy the query sub-set
-cp /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/TAIR10_pep_4000.fasta .
+cp ~/classdata/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/TAIR10_pep_4000.fasta .
 
 exit
 ```
@@ -454,11 +453,11 @@ cat $0
 
 module load blast/2.12.0
 
-indir="/mnt/clusters/sponsa/data/${USER}/blast_test"
+indir="/mnt/scratch/${USER}/blast_test"
 
-dbdir="/mnt/clusters/sponsa/data/${USER}/blast_test"
+dbdir="/mnt/scratch/${USER}/blast_test"
 
-outdir="/mnt/clusters/sponsa/data/${USER}/blast_test"
+outdir="/mnt/scratch/${USER}/blast_test"
 
 time blastp -num_threads ${SLURM_CPUS_PER_TASK} \
             -query "${indir}/TAIR10_pep_4000.fasta" \

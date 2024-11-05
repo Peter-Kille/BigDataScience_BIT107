@@ -42,7 +42,7 @@ We perform the following sequence of commands, first splitting the input fasta f
 ```{bash}
 ## enter a interactive Job
 srun -c 4 --mem=8G -p defq --pty bash
-cd ~/mydata/blast_test/
+cd ~/scratch/blast_test/
 
 ## a new folder
 mkdir split-files4
@@ -99,11 +99,11 @@ cat $0
 
 module load blast/2.12.0
 
-indir="/mnt/clusters/sponsa/data/${USER}/blast_test/split-files4"
+indir="/mnt/scratch/${USER}/blast_test/split-files4"
 
-dbdir="/mnt/clusters/sponsa/data/${USER}/blast_test"
+dbdir="/mnt/scratch/${USER}/blast_test"
 
-outdir="/mnt/clusters/sponsa/data/${USER}/blast_test/split-files4"
+outdir="/mnt/scratch/${USER}/blast_test/split-files4"
 
 time blastp -num_threads ${SLURM_CPUS_PER_TASK} \
             -query "${indir}/TAIR10_pep.vol.${i}.fasta" \
@@ -116,6 +116,7 @@ time blastp -num_threads ${SLURM_CPUS_PER_TASK} \
 
 Perform file-splitting procedure for both a 2-split and a 4-split of the original fasta file. The 'time-to-solution' results are added to the original benchmark chart. We assume that all jobs run concurrently, and we take the wall-time for the longest job
 
+::: {.callout-note collapse="true"}
 ## MPI Jobs
 
 Our example MPI job is based on a quantum espresso calculation. This script utilises the srun command, which is part of the slurm family of tools to run a parallel job on a cluster
@@ -148,7 +149,7 @@ echo "module list:"
 module list 2>&1
 
 # Some of these environment variables are utilised by the qe executable itself
-export ESPRESSO_DATAPATH=/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/
+export ESPRESSO_DATAPATH=~/classdata/REFS/slurm/slurm_examples/example2_mpi/
 export ESPRESSO_PSEUDO=${ESPRESSO_DATAPATH}
 export ESPRESSO_TMPDIR=${ESPRESSO_DATAPATH}/${SLURM_JOB_ID}
 
@@ -200,7 +201,7 @@ echo \$SLURM_MEM_PER_CPU=${SLURM_MEM_PER_CPU}
 echo "module list:"
 module list 2>&1
 
-DATAFOLDER=/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example3_pipeline
+DATAFOLDER=~/classdata/REFS/slurm/slurm_examples/example3_pipeline
 
 
 ### The data used in this pipeline has already been downloaded and stored in $DATAFOLDER.
@@ -277,11 +278,11 @@ Chaining jobs is a method of sequentially running dependent jobs. Our chain-job 
 
 Slurm has an option -d or --dependency that allows to specify that a job is only permitted to start if another job finished successfully.
 
-In the folder (gomphus cluster) /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain there are 6 separate job-scripts that need to be executed in a certain order. They are numbered in the correct pipeline order:
+In the folder (gomphus cluster) ~/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain there are 6 separate job-scripts that need to be executed in a certain order. They are numbered in the correct pipeline order:
 
 ```{bash}
-[user@gomphus ~]$ tree  /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain
-/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain
+[user@gomphus ~]$ tree  ~/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain
+~/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain
 ├── example4_chain-step1.sh
 ├── example4_chain-step2.sh
 ├── example4_chain-step3.sh
@@ -304,10 +305,11 @@ Each job is (importantly) commonly named using #SBATCH --job-name within each jo
 ```{bash}
 #!/bin/bash:
 
-for c in /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain/example4_chain-step?.sh ;
+for c in ~/classdata/REFS/slurm/slurm_examples/example4_chain/example4_chain-step?.sh ;
 do
  sbatch -d singleton $c
 done
 ```
 
 This sbatch command uses the -d singleton flag to notify slurm of the job-dependencies (all jobs must have the name job name defined by `#SBATCH --job-name [some constant name]`. At which point each submitted job will be forced to depend on successful completion of any previous job submitted by the same user, and with the same job-name. The full pipeline of 6 jobs will now run to completion, with no further user-intervention, making efficient use of the available resources.
+:::

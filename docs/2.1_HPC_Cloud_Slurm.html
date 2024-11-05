@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Prof.&nbsp;Peter Kille">
-<meta name="dcterms.date" content="2024-11-04">
+<meta name="dcterms.date" content="2024-11-05">
 
 <title>HPC, Cloud Computing &amp; Job Schedulers</title>
 <style>
@@ -156,7 +156,7 @@ background: darkred;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 4, 2024</p>
+        <p class="date">November 5, 2024</p>
       </div>
     </div>
     
@@ -567,8 +567,8 @@ background: darkred;
 <p>Some further useful (but not exhaustive) SBATCH options are detailed:</p>
 <table class="table">
 <colgroup>
-<col style="width: 30%">
-<col style="width: 69%">
+<col style="width: 31%">
+<col style="width: 68%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -853,20 +853,20 @@ Blast as an example - extension work if you are feeling confident
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">## navigate to mydata directory</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/mydata/</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/scratch/</span>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">## make a dirctory for blast test</span></span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> blast_test <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> blast_test </span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co">## copy TAIR file accross from class data to local file system</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/run2_split-files4/TAIR10_pep.fasta .</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/classdata/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/run2_split-files4/TAIR10_pep.fasta .</span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">## Makeblast db from downloaded file</span></span>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load blast/2.12.0</span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="ex">makeblastdb</span> <span class="at">-in</span> TAIR10_pep.fasta <span class="at">-parse_seqids</span> <span class="at">-dbtype</span> prot <span class="at">-title</span> <span class="st">"Small protein database"</span> <span class="at">-out</span> TAIR10_pep</span>
 <span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">##copy the query sub-set</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/TAIR10_pep_4000.fasta .</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/classdata/REFS/slurm/slurm_examples/indepth_parallelizing_blastp/TAIR10_pep_4000.fasta .</span>
 <span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -897,11 +897,11 @@ Blast as an example - extension work if you are feeling confident
 <span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load blast/2.12.0</span>
 <span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="va">indir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="va">indir</span><span class="op">=</span><span class="st">"/mnt/scratch/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
 <span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="va">dbdir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="va">dbdir</span><span class="op">=</span><span class="st">"/mnt/scratch/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
 <span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="va">outdir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="va">outdir</span><span class="op">=</span><span class="st">"/mnt/scratch/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
 <span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> blastp <span class="at">-num_threads</span> <span class="va">${SLURM_CPUS_PER_TASK}</span> <span class="dt">\</span></span>
 <span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>            <span class="at">-query</span> <span class="st">"</span><span class="va">${indir}</span><span class="st">/TAIR10_pep_4000.fasta"</span> <span class="dt">\</span></span>
