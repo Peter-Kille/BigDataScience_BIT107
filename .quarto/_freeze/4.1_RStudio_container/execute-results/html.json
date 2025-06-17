@@ -1,0 +1,15 @@
+{
+  "hash": "e35c0d2f25e1cade2d7de8ecc2fa1778",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle-block-style: default\ntitle-block-banner: darkred\ntitle-block-banner-color: white\ntitle: \"Rstudio_container\"\nsubtitle: \"Using SSH tunnel for R Studio\"\nauthor: \"Prof. Peter Kille\"\ndate: today\naffiliation: \"Cardiff University\"\n---\n\n\n\n<body style=\"background-color:gray99;\">\n\n\n\n\n\n\n\n![](Images/logo.jpg){width=\"10%\"}\n\n# Rstudio Quick and easy\n\n-   Step 1 - Copy `Rstudio_container` folder from classdata into you mydata directory\n-   Step 2 - Make sure you have bash local environment installed on mobxterm (PC only)\n-   Step 3 - Change directory to enter ```Rstudio_container``` folder and run ```sbatch rstudio-server-442.job```\n-   Step 4 - Print \\[jobid\\].err file to screen - note the ssh command and copy and paste that into a 'local' blank terminal session.\n-   Step 5 - Paste `http://localhost:8787` into a browser and copy and paste in username and password listed in the \\[jobid\\].err file.\n-   Step 6 - Local interface to a server based Rstudio should now appear. You can close browser and relogon as many times as you like. The session will close in 24 hours unless you edit the job file (see advanced instructions). You also do not need to keep your command line session running.\n-   Step 7 - When finished please `scancel -f [jobid]`\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

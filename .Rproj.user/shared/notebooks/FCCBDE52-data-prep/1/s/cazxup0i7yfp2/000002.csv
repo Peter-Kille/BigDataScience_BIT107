@@ -1,5 +1,0 @@
-"0","```r
-write_tsv(table1, \"amphiprion-clarkii-table1.tsv\")
-write_tsv(table2, \"amphiprion-clarkii-table2.tsv\")
-write_tsv(table3, \"amphiprion-clarkii-table3.tsv\")
-```"

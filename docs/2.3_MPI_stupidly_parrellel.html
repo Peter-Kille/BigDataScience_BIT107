@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Prof.&nbsp;Peter Kille">
-<meta name="dcterms.date" content="2024-11-04">
+<meta name="dcterms.date" content="2025-06-17">
 
 <title>Threads, MPI and embarrassingly parallel</title>
 <style>
@@ -24,7 +24,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -60,28 +60,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd%202.js"></script>
-<script src="site_libs/quarto-search/fuse.min%202.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto%202.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-b512256bc363577b27543e003c495f0c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,8 +96,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <style>
@@ -119,15 +127,15 @@ background: darkred;
 <body style="background-color:gray99;" class="nav-sidebar docked">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="2.1_HPC_Cloud_Slurm.html">Session 2: HPC Cloud Slurm</a></li><li class="breadcrumb-item"><a href="2.3_MPI_stupidly_parrellel.html">Threads, MPI and embarrassingly parallel</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2.1_HPC_Cloud_Slurm.html">Session 2: HPC Cloud Slurm</a></li><li class="breadcrumb-item"><a href="./2.3_MPI_stupidly_parrellel.html">Threads, MPI and embarrassingly parallel</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -137,7 +145,7 @@ background: darkred;
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
+    <div class="quarto-title column-body"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2.1_HPC_Cloud_Slurm.html">Session 2: HPC Cloud Slurm</a></li><li class="breadcrumb-item"><a href="./2.3_MPI_stupidly_parrellel.html">Threads, MPI and embarrassingly parallel</a></li></ol></nav>
       <h1 class="title">Threads, MPI and embarrassingly parallel</h1>
             <p class="subtitle lead">Making my job faster</p>
                       </div>
@@ -156,7 +164,7 @@ background: darkred;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 4, 2024</p>
+        <p class="date">June 17, 2025</p>
       </div>
     </div>
     
@@ -166,7 +174,7 @@ background: darkred;
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
@@ -176,16 +184,16 @@ background: darkred;
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Big Data Biology - BIT010</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="0.1_index.html" class="sidebar-item-text sidebar-link">
+  <a href="./0.1_index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Big Data Science</span></a>
   </div>
 </li>
@@ -193,28 +201,28 @@ background: darkred;
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Session 2: HPC Cloud Slurm</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="2.1_HPC_Cloud_Slurm.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.1_HPC_Cloud_Slurm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">HPC, Cloud Computing &amp; Job Schedulers</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="2.2_Slurm_dependencies.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.2_Slurm_dependencies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Slurm Dependencies</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="2.3_MPI_stupidly_parrellel.html" class="sidebar-item-text sidebar-link active">
+  <a href="./2.3_MPI_stupidly_parrellel.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Threads, MPI and embarrassingly parallel</span></a>
   </div>
 </li>
@@ -222,23 +230,40 @@ background: darkred;
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Session 3: FAIR Data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="3.1_FAIR_data.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.1_FAIR_data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAIR Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="3.2_Containers.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.2_Containers.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Continers</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Session 4: RStudio Container</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./4.1_RStudio_container.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rstudio_container</span></a>
   </div>
 </li>
       </ul>
@@ -246,7 +271,7 @@ background: darkred;
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -257,15 +282,13 @@ background: darkred;
   <ul class="collapse">
   <li><a href="#parallel-jobs" id="toc-parallel-jobs" class="nav-link" data-scroll-target="#parallel-jobs">Parallel Jobs</a></li>
   <li><a href="#embarrassingly-parallel" id="toc-embarrassingly-parallel" class="nav-link" data-scroll-target="#embarrassingly-parallel">Embarrassingly parallel</a></li>
-  <li><a href="#mpi-jobs" id="toc-mpi-jobs" class="nav-link" data-scroll-target="#mpi-jobs">MPI Jobs</a></li>
-  <li><a href="#threaded-jobs" id="toc-threaded-jobs" class="nav-link" data-scroll-target="#threaded-jobs">Threaded Jobs</a></li>
-  <li><a href="#job-chains-and-job-dependency" id="toc-job-chains-and-job-dependency" class="nav-link" data-scroll-target="#job-chains-and-job-dependency">Job Chains and Job Dependency</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
+
 
 
 
@@ -294,7 +317,7 @@ background: darkred;
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## enter a interactive Job</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/mydata/blast_test/</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/scratch/blast_test/</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">## a new folder</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> split-files4</span>
@@ -346,11 +369,11 @@ background: darkred;
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load blast/2.12.0</span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="va">indir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test/split-files4"</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="va">indir</span><span class="op">=</span><span class="st">"/mnt/scratch/</span><span class="va">${USER}</span><span class="st">/blast_test/split-files4"</span></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="va">dbdir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="va">dbdir</span><span class="op">=</span><span class="st">"/mnt/scratch/</span><span class="va">${USER}</span><span class="st">/blast_test"</span></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="va">outdir</span><span class="op">=</span><span class="st">"/mnt/clusters/sponsa/data/</span><span class="va">${USER}</span><span class="st">/blast_test/split-files4"</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="va">outdir</span><span class="op">=</span><span class="st">"/mnt/scratch/</span><span class="va">${USER}</span><span class="st">/blast_test/split-files4"</span></span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> blastp <span class="at">-num_threads</span> <span class="va">${SLURM_CPUS_PER_TASK}</span> <span class="dt">\</span></span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            <span class="at">-query</span> <span class="st">"</span><span class="va">${indir}</span><span class="st">/TAIR10_pep.vol.</span><span class="va">${i}</span><span class="st">.fasta"</span> <span class="dt">\</span></span>
@@ -361,9 +384,18 @@ background: darkred;
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>            <span class="at">-out</span> <span class="st">"</span><span class="va">${outdir}</span><span class="st">/blastp_vol</span><span class="va">${i}</span><span class="st">_cpu</span><span class="va">${SLURM_CPUS_PER_TASK}</span><span class="st">_job</span><span class="va">${SLURM_JOBID}</span><span class="st">.txt"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Perform file-splitting procedure for both a 2-split and a 4-split of the original fasta file. The ‘time-to-solution’ results are added to the original benchmark chart. We assume that all jobs run concurrently, and we take the wall-time for the longest job</p>
-</section>
-<section id="mpi-jobs" class="level2">
-<h2 class="anchored" data-anchor-id="mpi-jobs">MPI Jobs</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+MPI Jobs
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>Our example MPI job is based on a quantum espresso calculation. This script utilises the srun command, which is part of the slurm family of tools to run a parallel job on a cluster</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
@@ -393,7 +425,7 @@ background: darkred;
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> list <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Some of these environment variables are utilised by the qe executable itself</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_DATAPATH</span><span class="op">=</span>/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_DATAPATH</span><span class="op">=</span>~/classdata/REFS/slurm/slurm_examples/example2_mpi/</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_PSEUDO</span><span class="op">=</span><span class="va">${ESPRESSO_DATAPATH}</span></span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">ESPRESSO_TMPDIR</span><span class="op">=</span><span class="va">${ESPRESSO_DATAPATH}</span>/<span class="va">${SLURM_JOB_ID}</span></span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
@@ -405,9 +437,21 @@ background: darkred;
 </div>
 <p>The job requests 32 cores to be allocated, and runs the srun command with the argument -n ${SLURM_NTASKS} which tells srun to spawn the mpi-job with the total number of processes requested. Quantum Espresso utilises the environment variable ESPRESSO_TMPDIR which points to a temporary folder. We design this in our slurm script to point to a subfolder.</p>
 <p>An alternative storage location is the compute node’s local storage. This can improve runtime I/O performance. However, local storage on the compute nodes is limited (Gigabytes not Terabytes), and it’s availability is a little hidden from the user, so take care not to fill up the disk(!) and remove all files from the compute node’s local storage within the job script (your only access to the compute node’s /local folder is via the slurm script). An alternative job script which utilises a compute node’s /local storage is provided on the gomphus server /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example2_mpi/example2_mpi_localstorage.sh.</p>
-</section>
-<section id="threaded-jobs" class="level2">
-<h2 class="anchored" data-anchor-id="threaded-jobs">Threaded Jobs</h2>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Threaded Jobs
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>A number of popular bioinformatics software are capable of parallelising execution using threads (usually OpenMP or pthreads). This parallelisation method does not normally use distributed memory, so the application will need to be run on a single node. Our threaded example slurm-script is based on BLAST+. The job script is listed:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
@@ -442,7 +486,7 @@ background: darkred;
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"module list:"</span></span>
 <span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> list <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="va">DATAFOLDER</span><span class="op">=</span>/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example3_pipeline</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="va">DATAFOLDER</span><span class="op">=</span>~/classdata/REFS/slurm/slurm_examples/example3_pipeline</span>
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">### The data used in this pipeline has already been downloaded and stored in $DATAFOLDER.</span></span>
@@ -509,15 +553,14 @@ background: darkred;
 <p>This is quite a busy job-script (and also inefficient on resources!). It runs through a number of steps, but some of those steps will utilise parallelisation via threading, and use the slurm environment variable SLURM_CPUS_PER_TASK to inform the application(s) of the correct number of threads.</p>
 <p>But why is this job inefficient on resources? This particular job involves a number of steps: some utilising parallelisation, and some not; some memory-hungry, others not. The problem with this is that the job has allocated to it a set amount of resources (compute and memory), which is allocated to it for the lifetime of the job. But only at certain times in this job are the resources requested fully utilised. At all other times this job is running, the resources are allocated, but not used, and therefore making those resources unavailable to other jobs. This has a knock-on effect of increasing queue-times, and leaves expensive resources idle.</p>
 <p>A much more efficient way of running the same pipeline is to chain the job - split the pipeline into component parts and submit separate jobs for each of those parts. Each section of the pipeline (having its own job-script) is then free to allocate resources specific to that section of the pipeline. In the slurm world this is called job chaining, and has been exemplified in the next section using the same pipeline.</p>
-</section>
 <section id="job-chains-and-job-dependency" class="level2">
 <h2 class="anchored" data-anchor-id="job-chains-and-job-dependency">Job Chains and Job Dependency</h2>
 <p>Chaining jobs is a method of sequentially running dependent jobs. Our chain-job example is a pipeline of 6 separate job scripts, based on the blast+ pipeline of the previous section. We do not show the full six job-scripts here for brevity, but are available on the gomphus cluster under /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain.</p>
 <p>Slurm has an option -d or –dependency that allows to specify that a job is only permitted to start if another job finished successfully.</p>
-<p>In the folder (gomphus cluster) /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain there are 6 separate job-scripts that need to be executed in a certain order. They are numbered in the correct pipeline order:</p>
+<p>In the folder (gomphus cluster) ~/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain there are 6 separate job-scripts that need to be executed in a certain order. They are numbered in the correct pipeline order:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@gomphus</span> ~]$ tree  /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@gomphus</span> ~]$ tree  ~/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">~/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step1.sh</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step2.sh</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> example4_chain-step3.sh</span>
@@ -538,12 +581,16 @@ background: darkred;
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash:</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> /mnt/clusters/sponsa/data/classdata/Bioinformatics/REFS/slurm/slurm_examples/example4_chain/example4_chain-step<span class="pp">?</span>.sh <span class="kw">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> ~/classdata/REFS/slurm/slurm_examples/example4_chain/example4_chain-step<span class="pp">?</span>.sh <span class="kw">;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">sbatch</span> <span class="at">-d</span> singleton <span class="va">$c</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This sbatch command uses the -d singleton flag to notify slurm of the job-dependencies (all jobs must have the name job name defined by <code>#SBATCH --job-name [some constant name]</code>. At which point each submitted job will be forced to depend on successful completion of any previous job submitted by the same user, and with the same job-name. The full pipeline of 6 jobs will now run to completion, with no further user-intervention, making efficient use of the available resources.</p>
+</section>
+</div>
+</div>
+</div>
 
 
 </section>
@@ -585,18 +632,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -628,11 +664,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -642,8 +715,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -655,7 +737,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -699,6 +903,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -724,6 +929,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -784,6 +1015,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

@@ -1,8 +1,0 @@
-"0","```r
-table1 <- samp_lig %>% 
-  slice(1:999)
-table2 <- samp_lig %>% 
-  slice(1000:1998)
-table3 <- samp_lig %>% 
-  slice(1998:2881)
-```"

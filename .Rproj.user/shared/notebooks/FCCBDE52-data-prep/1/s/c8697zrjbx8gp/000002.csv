@@ -1,4 +1,0 @@
-"0","```r
-template <- read_tsv(\"Model.organism.animal.1.0.tsv\", skip = 11)
-
-```"
