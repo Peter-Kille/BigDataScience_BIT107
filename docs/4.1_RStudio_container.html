@@ -245,6 +245,18 @@ background: darkred;
    
   <ul>
   <li><a href="#rstudio-quick-and-easy" id="toc-rstudio-quick-and-easy" class="nav-link active" data-scroll-target="#rstudio-quick-and-easy">Rstudio Quick and easy</a></li>
+  <li><a href="#detailed-instructions" id="toc-detailed-instructions" class="nav-link" data-scroll-target="#detailed-instructions">Detailed Instructions</a>
+  <ul class="collapse">
+  <li><a href="#step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory" id="toc-step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory" class="nav-link" data-scroll-target="#step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory">Step 1 - Copy <code>Rstudio_container</code> folder from classdata into you mydata directory</a></li>
+  <li><a href="#step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only" id="toc-step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only" class="nav-link" data-scroll-target="#step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only">Step 2 - Make sure you have bash local environment installed on mobxterm (PC only)</a></li>
+  <li><a href="#step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job" id="toc-step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job" class="nav-link" data-scroll-target="#step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job">Step 3 - Change directory to enter <code>Rstudio_container</code> folder and run <code>sbatch rstudio-server-442.job</code></a>
+  <ul class="collapse">
+  <li><a href="#step-4---print-jobid.err-file-to-screen---note-the-ssh-command-and-copy-and-paste-that-into-a-local-blank-terminal-session." id="toc-step-4---print-jobid.err-file-to-screen---note-the-ssh-command-and-copy-and-paste-that-into-a-local-blank-terminal-session." class="nav-link" data-scroll-target="#step-4---print-jobid.err-file-to-screen---note-the-ssh-command-and-copy-and-paste-that-into-a-local-blank-terminal-session.">Step 4 - Print [jobid].err file to screen - note the ssh command and copy and paste that into a ‘local’ blank terminal session.</a></li>
+  </ul></li>
+  <li><a href="#step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file." id="toc-step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file." class="nav-link" data-scroll-target="#step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file.">Step 5 - Paste <code>http://localhost:8787</code> into a browser and copy and paste in username and password listed in the [jobid].err file.</a></li>
+  <li><a href="#step-6---local-interface-to-a-server-based-rstudio-should-now-appear." id="toc-step-6---local-interface-to-a-server-based-rstudio-should-now-appear." class="nav-link" data-scroll-target="#step-6---local-interface-to-a-server-based-rstudio-should-now-appear.">Step 6 - Local interface to a server based Rstudio should now appear.</a></li>
+  <li><a href="#step-7---when-finished-please-scancel--f-jobid" id="toc-step-7---when-finished-please-scancel--f-jobid" class="nav-link" data-scroll-target="#step-7---when-finished-please-scancel--f-jobid">Step 7 - When finished please <code>scancel -f [jobid]</code></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -268,8 +280,62 @@ background: darkred;
 <li>Step 6 - Local interface to a server based Rstudio should now appear. You can close browser and relogon as many times as you like. The session will close in 24 hours unless you edit the job file (see advanced instructions). You also do not need to keep your command line session running.</li>
 <li>Step 7 - When finished please <code>scancel -f [jobid]</code></li>
 </ul>
+</section>
+<section id="detailed-instructions" class="level1">
+<h1>Detailed Instructions</h1>
+<section id="step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory" class="level2">
+<h2 class="anchored" data-anchor-id="step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory">Step 1 - Copy <code>Rstudio_container</code> folder from classdata into you mydata directory</h2>
+<p>Before you run this make sure you have symlinks created to your classdata and mydata from your home folder. to check if you have type <code>cd</code> then <code>ls</code> and you should see classdata and mydata appear in light blue.</p>
+<pre><code>cp -R ~/classdata/Rstudio_container ~/mydata/Rstudio_container</code></pre>
+</section>
+<section id="step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only" class="level2">
+<h2 class="anchored" data-anchor-id="step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only">Step 2 - Make sure you have bash local environment installed on mobxterm (PC only)</h2>
+<p>You will need to run a linux command on your PC (macs can do this from any terminal) The easiest way to do this is from MobaXterm by opening a bash session in a blank tab. Often MoaXterm does not install the bash plugin so you need to check and install if needed. In mobaXterm go to <code>settings &gt; configuration &gt; Terminal</code>. Now look at the last configuration panel - Local environment - you want to selecet Bash (32 bit) from the pull down menu. It may ask permission to install a plugin and restart MobaXterm. Once selecetd you can select OK. Now if you click the + tab next to your session window a local bash terminal will appear.</p>
+</section>
+<section id="step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job" class="level2">
+<h2 class="anchored" data-anchor-id="step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job">Step 3 - Change directory to enter <code>Rstudio_container</code> folder and run <code>sbatch rstudio-server-442.job</code></h2>
+<pre><code>cd ~/mydata/Rstudio_container
+sbatch rstudio-server-442.job</code></pre>
+<p>*** if you are running a long job or one that needs more processor or RAM you can edit the job script parameters***</p>
+<section id="step-4---print-jobid.err-file-to-screen---note-the-ssh-command-and-copy-and-paste-that-into-a-local-blank-terminal-session." class="level3">
+<h3 class="anchored" data-anchor-id="step-4---print-jobid.err-file-to-screen---note-the-ssh-command-and-copy-and-paste-that-into-a-local-blank-terminal-session.">Step 4 - Print [jobid].err file to screen - note the ssh command and copy and paste that into a ‘local’ blank terminal session.</h3>
+<p>This is as easier as it sounds …… use cat to print to screen and you should see somethign like this:</p>
+<pre><code>#########################################
+# An rstudio-server session is launching.
+# To connect to this session you will need
+# to create an SSH tunnel from your local
+# workstation/desktop/laptop:
+
+   ssh -NL 8787:admiral1:32985 [username]@admiral.bios.cf.ac.uk
+
+   and point your web browser to http://localhost:8787
+
+# log in to RStudio Server using the following credentials:
+
+   user: [username]
+   password: [ver complex password]
+
+# When done using RStudio Server, terminate the job by:
+#  *  Issue the following command on the iago login node:
+
+      scancel -f [jobid]
+#########################################
+</code></pre>
+</section>
+</section>
+<section id="step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file." class="level2">
+<h2 class="anchored" data-anchor-id="step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file.">Step 5 - Paste <code>http://localhost:8787</code> into a browser and copy and paste in username and password listed in the [jobid].err file.</h2>
+<p>This is very very straightforward :)</p>
+</section>
+<section id="step-6---local-interface-to-a-server-based-rstudio-should-now-appear." class="level2">
+<h2 class="anchored" data-anchor-id="step-6---local-interface-to-a-server-based-rstudio-should-now-appear.">Step 6 - Local interface to a server based Rstudio should now appear.</h2>
+<p>You can close browser and relogon as many times as you like. The session will close in 24 hours unless you edit the job file (see advanced instructions). You also do not need to keep your command line session running.</p>
+</section>
+<section id="step-7---when-finished-please-scancel--f-jobid" class="level2">
+<h2 class="anchored" data-anchor-id="step-7---when-finished-please-scancel--f-jobid">Step 7 - When finished please <code>scancel -f [jobid]</code></h2>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -502,5 +502,71 @@
     "title": "R Notebook",
     "section": "",
     "text": "Prepping data to add to SRA\n\nImport the template\nThe first 11 rows are instructions\n\ntemplate &lt;- read_tsv(\"Model.organism.animal.1.0.tsv\", skip = 11)\n\n\n\nImport the data\n\nligation_ids &lt;- read_genepop(\"~/Documents/genomics_pinskylab/data/seq33_03_baits_only_SNPs.gen\") %&gt;% \n  # choose only the names column\n  select(sample) %&gt;% \n  # remove APCL_ from the ligation_id\n  mutate(ligation_id = str_extract(sample, \"L\\\\d+\")) %&gt;% \n  # remove the names column\n  select(-sample)\n\n# bring in fish data from database\nfish &lt;- fish_anem_dive() %&gt;% \n  filter(!is.na(sample_id)) %&gt;% \n  select(sample_id, sex, date)\n\n#what are the sample_ids for these ligation_ids\nsample_ids &lt;- samp_from_lig(ligation_ids) %&gt;% \n  rename(sample_name = sample_id) %&gt;% \n  # Add the organism\n  mutate(organism = \"Amphiprion clarkii\", \n         isolate = \"not applicable\", \n         tissue = \"tail fin\") %&gt;% \n  left_join(fish, by = c(\"sample_name\" = \"sample_id\")) %&gt;% \n  rename(collection_date = date)\n\n\n\nSRA did not like repeat sample_ids. Removing sample_ids and keeping only ligation ids\n\nlig_only &lt;- sample_ids %&gt;% \n  select(-sample_name) %&gt;% \n  rename(sample_name = ligation_id)\n\n\n\nApparently there are also duplicate ligation_ids\n\ndups &lt;- sample_ids %&gt;% \n  group_by(ligation_id) %&gt;% \n  count() %&gt;% \n  filter(n &gt; 1)\n\n\n\nAccording to this code, there are not duplicates. However, the wording looks like maybe they want unique individuals, as in individuals that were not collected on the same day.\n“Your table upload failed because multiple BioSamples cannot have identical attributes. You should have one BioSample for each specimen, and each of your BioSamples must have differentiating information (excluding sample name, title, bioproject accession and description). This check was implemented to encourage submitters to include distinguishing information in their samples. If the distinguishing information is in the sample name, title or description, please recode it into an appropriate attribute, either one of the predefined attributes or a custom attribute you define. If it is necessary to represent true biological replicates as separate BioSamples, you might add an ‘aliquot’ or ‘replicate’ attribute, e.g., ‘replicate = biological replicate 1’, as appropriate. Note that multiple assay types, e.g., RNA-seq and ChIP-seq data may reference the same BioSample if appropriate.” # To get past this, I am going to include ligation_id in sample name and also include a column called ligation_id (a custom attribute).\n\nsamp_lig &lt;- sample_ids %&gt;% \n  mutate(sample_name = str_c(sample_name, ligation_id, sep = \"_\"))\n\n\n\nSRA requires that we change M to male and F to female and that we define age, development stage\n\nsamp_lig &lt;- samp_lig %&gt;% \n  mutate(sex = ifelse(sex == \"M\", \"male\", sex), \n         sex = ifelse(sex == \"F\", \"female\", sex), \n         sex = ifelse(sex == \"J\", \"not applicable\", sex), \n         dev_stage = ifelse(sex == \"not applicable\", \"juvenile\", NA),\n         dev_stage = ifelse(sex != \"not applicable\", \"adult\", dev_stage)) %&gt;% \n  # remove any non_apcl samples\n  filter(grepl(\"APCL\", sample_name)) %&gt;% \n  arrange(ligation_id)\n\n\n\nSRA requires that these files are 1000 lines or less\n\ntable1 &lt;- samp_lig %&gt;% \n  slice(1:999)\ntable2 &lt;- samp_lig %&gt;% \n  slice(1000:1998)\ntable3 &lt;- samp_lig %&gt;% \n  slice(1998:2881)\n\n\n\nExport the data in tab delimited format\n\nwrite_tsv(table1, \"amphiprion-clarkii-table1.tsv\")\nwrite_tsv(table2, \"amphiprion-clarkii-table2.tsv\")\nwrite_tsv(table3, \"amphiprion-clarkii-table3.tsv\")\n\n\n\nLog on to https://submit.ncbi.nlm.nih.gov/subs/sra/SUB4607463/attributes and upload the table, then hit continue.\n\n\nThe next step is to add metadata\nView the SRA_metadata_PADE.xlsx file in excel\n\n# template2 &lt;- readxl::read_xlsx(\"SRA_metadata_PADE.xlsx\")\n\nSome samples have a different name and need to be replaced\n\n# open the list of files that have weird names\nreplacements &lt;- read_lines(\"list.txt\") %&gt;% \n  str_extract(., \"APCL_L\\\\d+.F-RG.bam\") %&gt;% \n  tibble() %&gt;% \n  rename(sample = \".\") %&gt;% \n  mutate(replace = str_c(str_extract(.,\"APCL_L\\\\d+\"), \"-RG.bam\"))\n\n\n\ncreate table for clarkii data\n\nmetadata &lt;- samp_lig %&gt;% \n  rename(library_ID = ligation_id) %&gt;% \n  mutate(title = \"ddRADseq of Amphiprion clarkii\", \n         library_strategy = \"RAD-Seq\", \n         library_source = \"GENOMIC\", \n         library_selection = \"Reduced Representation\", \n         library_layout = \"single\", \n         platform = \"Illumina\", \n         instrument_model = \"Illumina HiSeq 2500\", \n         design_description = \"ddRADseq using PstI and MluCI, and size selected to 375 ± 38 bp\", \n         filetype = \"bam\", \n         filename = str_c(\"APCL_\", library_ID, \"-RG.bam\", sep = \"\"), \n         assembly = NA\n         ) %&gt;%\n  select(-organism:-dev_stage) %&gt;% \n  # fix names of regeno files\n  mutate(filename = ifelse(filename == \"APCL_L0306-RG.bam\", \"APCL_L0306.L3598-RG.bam\", filename), \n          filename = ifelse(filename == \"APCL_L0308-RG.bam\", \"APCL_L0308.L3599-RG.bam\", filename),\n         filename = ifelse(filename == \"APCL_L0309-RG.bam\", \"APCL_L0309.L3601-RG.bam\", filename),\n         filename = ifelse(filename == \"APCL_L0814-RG.bam\", \"APCL_L0814.L3644-RG.bam\", filename),\n         filename = ifelse(filename == \"APCL_L1188-RG.bam\", \"APCL_L1188.L3266.L3352-RG.bam\", filename),\n         filename = ifelse(filename == \"APCL_L2324-RG.bam\", \"APCL_L2324.L3400-RG.bam\", filename)) %&gt;% \n  mutate(filename = ifelse(filename %in% replacements$replace, str_c(\"APCL_\", library_ID, \"-RG.bam\"), filename))\n\n\n\nSRA requires that these files are 1000 lines or less\n\nmetadata1 &lt;- metadata %&gt;% \n  slice(1:999)\nmetadata2 &lt;- metadata %&gt;% \n  slice(1000:1998)\nmetadata3 &lt;- metadata %&gt;% \n  slice(1998:2886)\n\n\n\nExport the meta data tables\n\nwrite_tsv(metadata1, \"amphiprion-clarkii-metadata1.tsv\")\nwrite_tsv(metadata2, \"amphiprion-clarkii-metadata2.tsv\")\nwrite_tsv(metadata3, \"amphiprion-clarkii-metadata3.tsv\")\n\n\n\nSending the bam files by FTP - COMPRESS Folder INTO TAR!!!\nI logged into the FTP using Fetch following the onscreen instructions and started dragging over bam files.\nHowever, the bam.bai files are also intertwined, it was taking hours, and was timing out before completing all of the transfers.\nI copied all of the bam files into a bam files folder in the data &gt; apcl &gt; all_samples &gt; 20181127 &gt; bam files.\nMaybe I can separate them into folders on my end and then just drag and drop the folder for submission. The folder transfer will take hours but hopefully it won’t time out.\n\n\nThe file names don’t match the metadata\nhand edit the metadata table because it is just a few regenotypes\n\n\nThe first submission is called SUB4607463\nThere is an error of undefined origin, waiting for an email response\n\n\nThe second submission is called SUB6249894\n\nMark no for biosample\nupload table_2 for biosample attributes\ntransferring files starting 11:20am on Monday, 9-9-2019"
+  },
+  {
+    "objectID": "4.1_RStudio_container.html#step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory",
+    "href": "4.1_RStudio_container.html#step-1---copy-rstudio_container-folder-from-classdata-into-you-mydata-directory",
+    "title": "Rstudio_container",
+    "section": "Step 1 - Copy Rstudio_container folder from classdata into you mydata directory",
+    "text": "Step 1 - Copy Rstudio_container folder from classdata into you mydata directory\nBefore you run this make sure you have symlinks created to your classdata and mydata from your home folder. to check if you have type cd then ls and you should see classdata and mydata appear in light blue.\ncp -R ~/classdata/Rstudio_container ~/mydata/Rstudio_container",
+    "crumbs": [
+      "Session 4: RStudio Container",
+      "Rstudio_container"
+    ]
+  },
+  {
+    "objectID": "4.1_RStudio_container.html#step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only",
+    "href": "4.1_RStudio_container.html#step-2---make-sure-you-have-bash-local-environment-installed-on-mobxterm-pc-only",
+    "title": "Rstudio_container",
+    "section": "Step 2 - Make sure you have bash local environment installed on mobxterm (PC only)",
+    "text": "Step 2 - Make sure you have bash local environment installed on mobxterm (PC only)\nYou will need to run a linux command on your PC (macs can do this from any terminal) The easiest way to do this is from MobaXterm by opening a bash session in a blank tab. Often MoaXterm does not install the bash plugin so you need to check and install if needed. In mobaXterm go to settings &gt; configuration &gt; Terminal. Now look at the last configuration panel - Local environment - you want to selecet Bash (32 bit) from the pull down menu. It may ask permission to install a plugin and restart MobaXterm. Once selecetd you can select OK. Now if you click the + tab next to your session window a local bash terminal will appear.",
+    "crumbs": [
+      "Session 4: RStudio Container",
+      "Rstudio_container"
+    ]
+  },
+  {
+    "objectID": "4.1_RStudio_container.html#step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job",
+    "href": "4.1_RStudio_container.html#step-3---change-directory-to-enter-rstudio_container-folder-and-run-sbatch-rstudio-server-442.job",
+    "title": "Rstudio_container",
+    "section": "Step 3 - Change directory to enter Rstudio_container folder and run sbatch rstudio-server-442.job",
+    "text": "Step 3 - Change directory to enter Rstudio_container folder and run sbatch rstudio-server-442.job\ncd ~/mydata/Rstudio_container\nsbatch rstudio-server-442.job\n*** if you are running a long job or one that needs more processor or RAM you can edit the job script parameters***\n\nStep 4 - Print [jobid].err file to screen - note the ssh command and copy and paste that into a ‘local’ blank terminal session.\nThis is as easier as it sounds …… use cat to print to screen and you should see somethign like this:\n#########################################\n# An rstudio-server session is launching.\n# To connect to this session you will need\n# to create an SSH tunnel from your local\n# workstation/desktop/laptop:\n\n   ssh -NL 8787:admiral1:32985 [username]@admiral.bios.cf.ac.uk\n\n   and point your web browser to http://localhost:8787\n\n# log in to RStudio Server using the following credentials:\n\n   user: [username]\n   password: [ver complex password]\n\n# When done using RStudio Server, terminate the job by:\n#  *  Issue the following command on the iago login node:\n\n      scancel -f [jobid]\n#########################################",
+    "crumbs": [
+      "Session 4: RStudio Container",
+      "Rstudio_container"
+    ]
+  },
+  {
+    "objectID": "4.1_RStudio_container.html#step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file.",
+    "href": "4.1_RStudio_container.html#step-5---paste-httplocalhost8787-into-a-browser-and-copy-and-paste-in-username-and-password-listed-in-the-jobid.err-file.",
+    "title": "Rstudio_container",
+    "section": "Step 5 - Paste http://localhost:8787 into a browser and copy and paste in username and password listed in the [jobid].err file.",
+    "text": "Step 5 - Paste http://localhost:8787 into a browser and copy and paste in username and password listed in the [jobid].err file.\nThis is very very straightforward :)",
+    "crumbs": [
+      "Session 4: RStudio Container",
+      "Rstudio_container"
+    ]
+  },
+  {
+    "objectID": "4.1_RStudio_container.html#step-6---local-interface-to-a-server-based-rstudio-should-now-appear.",
+    "href": "4.1_RStudio_container.html#step-6---local-interface-to-a-server-based-rstudio-should-now-appear.",
+    "title": "Rstudio_container",
+    "section": "Step 6 - Local interface to a server based Rstudio should now appear.",
+    "text": "Step 6 - Local interface to a server based Rstudio should now appear.\nYou can close browser and relogon as many times as you like. The session will close in 24 hours unless you edit the job file (see advanced instructions). You also do not need to keep your command line session running.",
+    "crumbs": [
+      "Session 4: RStudio Container",
+      "Rstudio_container"
+    ]
+  },
+  {
+    "objectID": "4.1_RStudio_container.html#step-7---when-finished-please-scancel--f-jobid",
+    "href": "4.1_RStudio_container.html#step-7---when-finished-please-scancel--f-jobid",
+    "title": "Rstudio_container",
+    "section": "Step 7 - When finished please scancel -f [jobid]",
+    "text": "Step 7 - When finished please scancel -f [jobid]",
+    "crumbs": [
+      "Session 4: RStudio Container",
+      "Rstudio_container"
+    ]
   }
 ]
