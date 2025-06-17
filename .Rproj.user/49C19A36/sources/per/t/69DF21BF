@@ -1,0 +1,31 @@
+{
+    "id": "69DF21BF",
+    "path": "C:/Users/smbpk/Cardiff University/Big Data Teaching - BIT107/Student Share/BigDataScience/2.1_HPC_Cloud_Slurm.qmd",
+    "project_path": "2.1_HPC_Cloud_Slurm.qmd",
+    "type": "quarto_markdown",
+    "hash": "2049624806",
+    "contents": "",
+    "dirty": false,
+    "created": 1730816328836.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "1",
+        "cursorPosition": "415,14",
+        "scrollLine": "411",
+        "rmdVisualModeLocation": "20773:12108",
+        "rmdVisualCollapsedChunks": ""
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1730816865,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1730816865798,
+    "read_only": false,
+    "read_only_alternatives": []
+}

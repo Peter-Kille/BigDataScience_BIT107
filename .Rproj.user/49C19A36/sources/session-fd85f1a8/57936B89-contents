@@ -60,20 +60,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd%202.js"></script>
-<script src="site_libs/quarto-search/fuse.min%202.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto%202.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
@@ -125,7 +125,7 @@ background: darkred;
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="3.1_FAIR_data.html">Session 3: FAIR Data</a></li><li class="breadcrumb-item"><a href="3.2_Containers.html">Continers</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3.1_FAIR_data.html">Session 3: FAIR Data</a></li><li class="breadcrumb-item"><a href="./3.2_Containers.html">Continers</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -185,7 +185,7 @@ background: darkred;
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="0.1_index.html" class="sidebar-item-text sidebar-link">
+  <a href="./0.1_index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Big Data Science</span></a>
   </div>
 </li>
@@ -202,19 +202,19 @@ background: darkred;
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="2.1_HPC_Cloud_Slurm.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.1_HPC_Cloud_Slurm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">HPC, Cloud Computing &amp; Job Schedulers</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="2.2_Slurm_dependencies.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.2_Slurm_dependencies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Slurm Dependencies</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="2.3_MPI_stupidly_parrellel.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.3_MPI_stupidly_parrellel.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Threads, MPI and embarrassingly parallel</span></a>
   </div>
 </li>
@@ -231,13 +231,13 @@ background: darkred;
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="3.1_FAIR_data.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.1_FAIR_data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAIR Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="3.2_Containers.html" class="sidebar-item-text sidebar-link active">
+  <a href="./3.2_Containers.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Continers</span></a>
   </div>
 </li>
@@ -372,17 +372,17 @@ background: darkred;
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">-c</span> 4 <span class="at">--mem</span><span class="op">=</span>8G <span class="at">-p</span> defq <span class="at">--pty</span> bash</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Load latest singularity module</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load apptainer/1.3.4</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load singularity/3.8.7</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">##make and enter a directory for your containers within your mydata directory</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/scratch</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /mnt/clusters/sponsa/data/<span class="va">$USER</span>/</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> singularity</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> singularity/</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">##Create cache and point the singularity cache directory</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> cache</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">APPTAINER_TMPDIR</span><span class="op">=</span>~/scratch/singularity/cache/</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">APPTAINER_CACHEDIR</span><span class="op">=</span>~/scratch/singularity/cache/</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SINGULARITY_TMPDIR</span><span class="op">=</span>/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/cache/</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SINGULARITY_CACHEDIR</span><span class="op">=</span>/mnt/clusters/sponsa/data/<span class="va">$USER</span>/singularity/cache</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">## Create and enter a working folder</span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> working</span>
